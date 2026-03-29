@@ -168,14 +168,33 @@
             display: none;
         }
         .demo-info-banner.visible { display: block; }
+
+        @media (max-width: 768px) {
+            .chart-area { height: 240px !important; }
+            .market-row td { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .fuel-filter { flex: 1 1 auto; min-width: 120px; }
+            .range-filter { flex: 1 1 40%; min-width: 110px; margin-bottom: 0.375rem; }
+            .range-filter:first-child { margin-top: 0.25rem; }
+            #view-markets > div:last-child .flex { flex-wrap: wrap; gap: 0.375rem; justify-content: center; }
+            #view-markets > div:last-child .flex > button { min-width: 95px; }
+            #mobile-nav { position: absolute; }
+        }
     </style>
 </head>
 <body class="bg-surface selection:bg-primary-container selection:text-on-primary-container">
 <!-- TopNavBar -->
 <nav class="fixed top-0 w-full z-50 bg-white dark:bg-neutral-900 border-b border-[#e5e5e5] dark:border-neutral-800">
-<div class="flex items-center justify-between px-8 h-16 max-w-full mx-auto">
-<div class="flex items-center gap-12">
+<div class="flex items-center justify-between px-4 md:px-8 h-16 max-w-full mx-auto">
+<div class="flex items-center gap-4 md:gap-12">
+<button id="mobile-menu-btn" class="md:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-outline-variant bg-surface-container-high text-lg" aria-label="Open navigation menu">☰</button>
 <span class="text-lg font-semibold text-[#1a1c1c] dark:text-white tracking-tighter">BusiHedge</span>
+<div id="mobile-nav" class="md:hidden hidden absolute top-16 left-0 right-0 bg-white border-b border-[#e5e5e5] shadow-md z-40">
+<div class="flex flex-col p-4 gap-2 text-sm">
+<a class="py-2 rounded hover:bg-surface-container" href="#">Markets</a>
+<a class="py-2 rounded hover:bg-surface-container" href="#">My Contracts</a>
+<a class="py-2 rounded hover:bg-surface-container" href="#">Portfolio</a>
+</div>
+</div>
 <div class="hidden md:flex items-center gap-8 font-['Inter'] font-normal text-sm tracking-tight h-full">
 <a class="text-[#0066ff] border-b-2 border-[#0066ff] pb-4 -mb-[17px] font-medium info-feature" data-demo-message="Markets page gives you quick access to available hedges & key pricing points, so you can pick coverage that best protects your weekly fuel spend." href="#">Markets</a>
 <a class="text-[#1a1c1c] dark:text-neutral-400 hover:text-[#0066ff] transition-colors info-feature" data-demo-message="My Contracts tracks active hedges and outcomes, giving you instant visibility into risk protection and settlement status." href="#">My Contracts</a>
@@ -218,7 +237,7 @@
         <li>Click <strong>Trade</strong> and confirm to lock in the protection.</li>
     </ul>
 </div>
-<main class="pt-24 pb-20 px-8 max-w-[1440px] mx-auto min-h-screen">
+<main class="pt-24 pb-20 px-4 md:px-8 max-w-[1440px] mx-auto min-h-screen">
 <!-- Hero Section: Featured Market Chart -->
 <section class="mb-12 section-transition" id="hero-chart">
 <div class="bg-[#fafafa] border border-[#e5e5e5] p-8 relative overflow-hidden">
@@ -308,8 +327,8 @@
 </div>
 </header>
 <!-- Market Table -->
-<div class="bg-surface-container-lowest border border-outline-variant/20 overflow-hidden">
-<table class="w-full text-left border-collapse">
+<div class="bg-surface-container-lowest border border-outline-variant/20 overflow-x-auto">
+<table class="w-full min-w-[900px] text-left border-collapse">
 <thead>
 <tr class="border-b border-outline-variant/20 bg-surface-container-low">
 <th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Benchmark Asset</th>
@@ -619,10 +638,18 @@
         };
         const heroSection = document.getElementById('hero-chart');
         const navLinks = document.querySelectorAll('nav a');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileNav = document.getElementById('mobile-nav');
         const fuelButtons = document.querySelectorAll('.fuel-filter');
         const rangeButtons = document.querySelectorAll('.range-filter');
         const assetRows = document.querySelectorAll('#view-markets .market-row');
         const tradeButtons = document.querySelectorAll('.trade-action');
+
+        if (mobileMenuBtn && mobileNav) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileNav.classList.toggle('hidden');
+            });
+        }
 
         const detailTitle = document.getElementById('detail-title');
         const detailCurrentPrice = document.getElementById('detail-current-price');
