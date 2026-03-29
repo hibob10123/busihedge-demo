@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BusiHedge | Precision Fuel Hedging</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0066ff",
+                        "surface-tint": "#0054d6",
+                        "secondary-container": "#7cf994",
+                        "surface-container-high": "#e8e8e8",
+                        "on-secondary-fixed-variant": "#005320",
+                        "on-surface-variant": "#424656",
+                        "surface-container-highest": "#e2e2e2",
+                        "outline-variant": "#c2c6d8",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#fff6f5",
+                        "background": "#f9f9f9",
+                        "surface-container-low": "#f3f3f3",
+                        "on-surface": "#1a1c1c",
+                        "outline": "#727687",
+                        "tertiary-fixed": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#410002",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#001849",
+                        "inverse-on-surface": "#f0f1f1",
+                        "surface": "#f9f9f9",
+                        "secondary-fixed": "#7ffc97",
+                        "secondary": "#16a34a",
+                        "tertiary-fixed-dim": "#ffb4ab",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#62df7d",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#f8f7ff",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "surface-bright": "#f9f9f9",
+                        "on-secondary-container": "#007230",
+                        "primary-container": "#0066ff",
+                        "error": "#dc2626",
+                        "primary-fixed": "#dae1ff",
+                        "on-background": "#1a1c1c",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container": "#eeeeee",
+                        "on-primary-fixed-variant": "#003fa4",
+                        "inverse-primary": "#b3c5ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#002109",
+                        "on-tertiary-fixed-variant": "#93000b",
+                        "inverse-surface": "#2f3131",
+                        "primary-fixed-dim": "#b3c5ff",
+                        "tertiary-container": "#dc2626",
+                        "tertiary": "#b70011"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+            font-size: 1.25rem;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; color: #1a1c1c; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        @keyframes path-entrance {
+            from { stroke-dashoffset: 1000; }
+            to { stroke-dashoffset: 0; }
+        }
+        .chart-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: path-entrance 2s ease-out forwards;
+        }
+        .chart-area:hover .guide-line { opacity: 1; }
+        .chart-area:hover .price-tooltip { opacity: 1; }
+
+        /* Minimal coherent page transitions */
+        .section-transition {
+            position: relative;
+            will-change: transform, opacity;
+        }
+        @keyframes slide-in-right {
+            0% { opacity: 0; transform: translateX(16px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slide-out-left {
+            0% { opacity: 1; transform: translateX(0); }
+            100% { opacity: 0; transform: translateX(-16px); }
+        }
+        .slide-enter {
+            animation: slide-in-right 380ms ease-out forwards;
+        }
+        .slide-exit {
+            animation: slide-out-left 280ms ease-in forwards;
+        }
+
+        /* Gentle card hover feedback */
+        .card-hover-smooth { transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }
+        .card-hover-smooth:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06); border-color: rgba(99, 102, 241, 0.24); }
+
+        @keyframes hero-price-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.85; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pulse-price { animation: hero-price-pulse 420ms ease; }
+
+        /* Demo mode highlight theme */
+        .demo-active nav {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        .demo-active nav a,
+        .demo-active nav span,
+        .demo-active #demo-mode-btn,
+        .demo-active .demo-info-banner {
+            color: #f8fafc !important;
+        }
+        .demo-active #demo-mode-btn {
+            border-color: #38bdf8 !important;
+            background: #0284c7 !important;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.24);
+        }
+        .demo-active .market-row {
+            border-color: rgba(6, 95, 276, 0.15);
+            background: rgba(56, 189, 248, 0.05);
+        }
+        .demo-active .card,
+        .demo-active .bg-surface-container-highest {
+            background: #0f172a !important;
+            color: #e2e8f0 !important;
+        }
+        .demo-active .chart-area {
+            background: rgba(59, 130, 246, 0.06);
+        }
+
+        .demo-info-banner {
+            position: fixed;
+            right: 1rem;
+            top: 4rem;
+            z-index: 1000;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #0284c7;
+            color: #ffffff;
+            font-size: 0.72rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,.2);
+            display: none;
+        }
+        .demo-info-banner.visible { display: block; }
+    </style>
+</head>
+<body class="bg-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white dark:bg-neutral-900 border-b border-[#e5e5e5] dark:border-neutral-800">
+<div class="flex items-center justify-between px-8 h-16 max-w-full mx-auto">
+<div class="flex items-center gap-12">
+<span class="text-lg font-semibold text-[#1a1c1c] dark:text-white tracking-tighter">BusiHedge</span>
+<div class="hidden md:flex items-center gap-8 font-['Inter'] font-normal text-sm tracking-tight h-full">
+<a class="text-[#0066ff] border-b-2 border-[#0066ff] pb-4 -mb-[17px] font-medium info-feature" data-demo-message="Markets page gives you quick access to available hedges & key pricing points, so you can pick coverage that best protects your weekly fuel spend." href="#">Markets</a>
+<a class="text-[#1a1c1c] dark:text-neutral-400 hover:text-[#0066ff] transition-colors info-feature" data-demo-message="My Contracts tracks active hedges and outcomes, giving you instant visibility into risk protection and settlement status." href="#">My Contracts</a>
+<a class="text-[#1a1c1c] dark:text-neutral-400 hover:text-[#0066ff] transition-colors info-feature" data-demo-message="Portfolio view shows pooled outcomes and financing health, helping operators understand their net cost impact over time." href="#">Portfolio</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button id="demo-mode-btn" class="px-3 py-1 text-[0.6875rem] font-semibold uppercase border border-outline-variant bg-surface-container-highest hover:bg-surface-container transition-colors">Demo Mode</button>
+<div class="flex items-center gap-2 text-on-surface-variant font-['Inter'] font-normal text-sm tracking-tight">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Atlanta, GA</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-xs font-bold text-on-surface">AF</div>
+</div>
+</div>
+</nav>
+<div id="demo-sidebar" class="fixed right-0 top-16 h-[calc(100%-4rem)] w-80 bg-white border-l border-[#e5e5e5] shadow-xl p-4 overflow-y-auto transition-transform duration-300 translate-x-full z-40">
+    <div class="flex items-start justify-between gap-2 pb-3 mb-3 border-b border-[#e5e5e5]">
+        <h3 class="text-lg font-semibold">Demo Mode Overview</h3>
+        <button id="demo-sidebar-close" class="text-sm text-neutral-500 hover:text-neutral-800">✕</button>
+    </div>
+    <p class="text-sm text-neutral-700 mb-3">BusiHedge helps small fleet operators cap fuel spend volatility with simple weekly parametric protection contracts. In this demo mode, hover highlighted controls to see what each piece means.</p>
+    <h4 class="text-sm font-bold uppercase tracking-wide text-neutral-500">How hedging works</h4>
+    <ul class="list-disc list-inside text-sm text-neutral-700 mb-3">
+        <li>Set a <strong>strike price</strong> (e.g. $3.15/gal) for your coverage.</li>
+        <li>Pay a predictable <strong>premium</strong> up front for a set volume.</li>
+        <li>If spot price > strike during coverage, you get automatic payout.</li>
+        <li>This turns fuel risk into predictable budget line item.</li>
+    </ul>
+    <h4 class="text-sm font-bold uppercase tracking-wide text-neutral-500">Main benefits</h4>
+    <ul class="list-disc list-inside text-sm text-neutral-700 mb-3">
+        <li>Protects margins when fuel spikes, so you can bid confidently.</li>
+        <li>Avoids surprise transport cost increases in your P&L.</li>
+        <li>Simple dashboard shows current exposures, settled contracts, and portfolio health.</li>
+    </ul>
+    <h4 class="text-sm font-bold uppercase tracking-wide text-neutral-500">What to do</h4>
+    <ul class="list-disc list-inside text-sm text-neutral-700">
+        <li>Use <strong>Markets</strong> to pick a hedging product by fuel type.</li>
+        <li>Pick a <strong>duration</strong> & strike that fits your business risk tolerance.</li>
+        <li>Click <strong>Trade</strong> and confirm to lock in the protection.</li>
+    </ul>
+</div>
+<main class="pt-24 pb-20 px-8 max-w-[1440px] mx-auto min-h-screen">
+<!-- Hero Section: Featured Market Chart -->
+<section class="mb-12 section-transition" id="hero-chart">
+<div class="bg-[#fafafa] border border-[#e5e5e5] p-8 relative overflow-hidden">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-[0.6875rem] font-semibold uppercase tracking-wider text-on-surface-variant">Live Benchmark Market</span>
+</div>
+<h2 class="text-2xl font-semibold tracking-tight info-feature" data-demo-message="Live benchmark price track. You can see how physical fuel spot exposures are priced in real time for budget certainty.">Atlanta Diesel Spot Price</h2>
+</div>
+<div class="flex items-center gap-10">
+<div class="text-right">
+<p class="text-[0.6875rem] font-semibold text-neutral-400 uppercase tracking-widest mb-1">Current Price</p>
+<span id="hero-current-price" class="mono text-2xl font-semibold tracking-tight">$3.1420</span>
+</div>
+<div class="text-right">
+<p class="text-[0.6875rem] font-semibold text-neutral-400 uppercase tracking-widest mb-1">24h Change</p>
+<span id="hero-24h-change" class="mono text-2xl font-semibold text-secondary">+$0.038 (+1.24%)</span>
+</div>
+<p class="mt-2 text-[0.68rem] text-neutral-500">Demo only: price streams are simulated and not actual market data.</p>
+</div>
+</div>
+<!-- Interactive SVG Chart -->
+<div class="relative w-full h-[320px] chart-area cursor-crosshair">
+<svg class="w-full h-full" id="svg-chart" preserveaspectratio="none" viewbox="0 0 1000 300">
+<!-- Grid Lines -->
+<line stroke="#e5e5e5" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="50" y2="50"></line>
+<line stroke="#e5e5e5" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="150" y2="150"></line>
+<line stroke="#e5e5e5" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="250" y2="250"></line>
+<!-- Price Path -->
+<path class="chart-path" d="M0,250 C100,240 200,260 300,180 S500,120 600,150 S800,80 1000,100" fill="none" stroke="#0066ff" stroke-width="2.5"></path>
+<!-- Area Gradient -->
+<path d="M0,250 C100,240 200,260 300,180 S500,120 600,150 S800,80 1000,100 L1000,300 L0,300 Z" fill="url(#chart-gradient)" opacity="0.1"></path>
+<defs>
+<lineargradient id="chart-gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#0066ff"></stop>
+<stop offset="100%" stop-color="#0066ff" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Interactive Elements -->
+<line class="guide-line opacity-0 transition-opacity duration-200" id="v-line" stroke="#727687" stroke-dasharray="5 5" stroke-width="1" x1="0" x2="0" y1="0" y2="300"></line>
+</svg>
+<!-- Tooltip -->
+<div class="price-tooltip opacity-0 pointer-events-none absolute bg-white border border-[#e5e5e5] px-3 py-2 shadow-sm transition-opacity duration-200 z-10" id="chart-tooltip">
+<p class="text-[10px] uppercase font-bold text-neutral-400 mb-0.5" id="tooltip-date">OCT 14, 08:30 AM</p>
+<p class="mono text-sm font-semibold text-primary" id="tooltip-price">$3.1420</p>
+</div>
+<!-- Y-Axis Labels -->
+<div class="absolute right-0 top-0 h-full flex flex-col justify-between py-2 text-[10px] mono text-neutral-400 pointer-events-none pr-2">
+<span>$3.50</span>
+<span>$3.25</span>
+<span>$3.00</span>
+<span>$2.75</span>
+</div>
+</div>
+<div class="mt-4 flex justify-between px-2">
+<div class="flex gap-8 text-[10px] mono text-neutral-400 uppercase">
+<span>OCT</span>
+<span>NOV</span>
+<span>DEC</span>
+<span>JAN</span>
+<span>FEB</span>
+<span>MAR</span>
+</div>
+<div class="flex gap-2">
+<button class="range-filter px-3 py-1 text-[10px] font-bold border border-primary bg-primary/10 text-primary info-feature" data-range="1D" data-demo-message="1-day view gives precise short-term trend context for weekly purchasing decisions">1D</button>
+<button class="range-filter px-3 py-1 text-[10px] font-bold border border-outline-variant hover:bg-surface-container transition-colors info-feature" data-range="1W" data-demo-message="1-week horizon simulates the actual contract cycle for weekly fuel buys">1W</button>
+<button class="range-filter px-3 py-1 text-[10px] font-bold border border-outline-variant hover:bg-surface-container transition-colors info-feature" data-range="1M" data-demo-message="1-month view shows broader volatility to plan next month’s fleet budget" >1M</button>
+<button class="range-filter px-3 py-1 text-[10px] font-bold border border-outline-variant hover:bg-surface-container transition-colors info-feature" data-range="YTD" data-demo-message="Year-to-date bucket helps compare performance vs prior periods for risk governance." >YTD</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Markets View (Active) -->
+<section class="space-y-8 section-transition" id="view-markets">
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-[1.5rem] font-medium tracking-tight text-on-surface info-feature" data-demo-message="Market listing shows hedging products by benchmark and strike ladder; helps clients pick coverage that matches their fleet fuel mix.">Available Markets</h1>
+<p class="text-on-surface-variant text-sm mt-1">Real-time fuel benchmarks and hedging strikes.</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-primary bg-primary text-on-primary info-feature" data-filter="All Fuels" data-demo-message="Show all available hedges so you can compare options and quickly choose the best fit for your fleet's usage." >All Fuels</button>
+<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-surface-container transition-colors text-on-surface-variant info-feature" data-filter="Diesel" data-demo-message="Diesel filter focuses the list on your most important freight fuel contract">Diesel</button>
+<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-surface-container transition-colors text-on-surface-variant info-feature" data-filter="Gasoline" data-demo-message="Gasoline filter shows contracts if your fleet uses mixed fuels, ensuring you don't over-hedge or miss opportunities." >Gasoline</button>
+<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-surface-container transition-colors text-on-surface-variant info-feature" data-filter="Jet Fuel" data-demo-message="Jet Fuel filter is for last-mile or heavy equipment users needing aviation-grade fuel risk cover." >Jet Fuel</button>
+</div>
+</header>
+<!-- Market Table -->
+<div class="bg-surface-container-lowest border border-outline-variant/20 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant/20 bg-surface-container-low">
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Benchmark Asset</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Current Price</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">24h Change</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500 info-feature" data-demo-message="Strike ladder shows trigger levels; the closer current price is to a strike, the higher the chance of payout, letting you choose cost vs. protection tradeoffs.">Strike Ladder (Visual)</th>
+<th class="py-4 px-6 text-right"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="market-row hover:bg-surface-container-low transition-colors cursor-pointer group" data-asset="Atlanta Ultra-Low Sulfur Diesel">
+<td class="py-5 px-6">
+<div class="flex flex-col">
+<span class="text-sm font-semibold">Atlanta Ultra-Low Sulfur Diesel</span>
+<span class="text-xs text-on-surface-variant">FOB Pipeline • Spot</span>
+</div>
+</td>
+<td class="py-5 px-6">
+<span class="mono text-md font-medium">$3.1420</span>
+</td>
+<td class="py-5 px-6">
+<span class="mono text-sm text-secondary">+1.24%</span>
+</td>
+<td class="py-5 px-6">
+<div class="flex items-center gap-1">
+<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px] info-feature" data-demo-message="Strike level: if market price exceeds this, payout is triggered. Choose a higher strike for lower premium and less frequent protection.">$3.10</div>
+<div class="h-6 w-10 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary info-feature" data-demo-message="Your chosen strike zone (highlighted) is the protection target. This is the price threshold in your hedging contract.">$3.15</div>
+<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px] info-feature" data-demo-message="Strike has a payout delta: $3.20 has more cost but higher chance of being in-the-money if market surges.">$3.20</div>
+<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px] info-feature" data-demo-message="High strike like $3.25 is conservative protection with lowest premium, for cautious cashflow managers.">$3.25</div>
+</div>
+</td>
+<td class="py-5 px-6 text-right">
+<button class="px-4 py-2 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant transition-colors trade-action info-feature" data-demo-message="Trade launches contract flow; this is where you lock in protection and convert exposure to budget certainty">Trade</button>
+</td>
+</tr>
+<tr class="market-row hover:bg-surface-container-low transition-colors cursor-pointer" data-asset="Gulf Coast RBOB Gasoline">
+<td class="py-5 px-6">
+<div class="flex flex-col">
+<span class="text-sm font-semibold">Gulf Coast RBOB Gasoline</span>
+<span class="text-xs text-on-surface-variant">M Grade • Spot</span>
+</div>
+</td>
+<td class="py-5 px-6">
+<span class="mono text-md font-medium">$2.5892</span>
+</td>
+<td class="py-5 px-6">
+<span class="mono text-sm text-error">-0.45%</span>
+</td>
+<td class="py-5 px-6">
+<div class="flex items-center gap-1">
+<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.50</div>
+<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.55</div>
+<div class="h-6 w-10 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$2.60</div>
+<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.65</div>
+</div>
+</td>
+<td class="py-5 px-6 text-right">
+<button class="px-4 py-2 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider trade-action">Trade</button>
+</td>
+</tr>
+<tr class="market-row hover:bg-surface-container-low transition-colors cursor-pointer" data-asset="Chicago Jet Fuel">
+<td class="py-5 px-6">
+<div class="flex flex-col">
+<span class="text-sm font-semibold">Chicago Jet Fuel</span>
+<span class="text-xs text-on-surface-variant">Regular • Spot</span>
+</div>
+</td>
+<td class="py-5 px-6">
+<span class="mono text-md font-medium">$2.9411</span>
+</td>
+<td class="py-5 px-6">
+<span class="mono text-sm text-secondary">+0.12%</span>
+</td>
+<td class="py-5 px-6">
+<div class="flex items-center gap-1">
+<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.90</div>
+<div class="h-6 w-10 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$2.95</div>
+<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.00</div>
+<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.05</div>
+</div>
+</td>
+<td class="py-5 px-6 text-right">
+<button class="px-4 py-2 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider trade-action">Trade</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Contract Detail View (Initially Hidden) -->
+<section class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-start section-transition" id="view-contract-detail">
+<div class="lg:col-span-8 space-y-6">
+<!-- Chart Header -->
+<div class="bg-surface-container-lowest p-8 border border-outline-variant/20">
+<div class="flex justify-between items-start mb-8">
+<div>
+<span class="text-[0.6875rem] font-semibold uppercase tracking-wider text-on-surface-variant info-feature" data-demo-message="Analysis panel gives clients confidence in model-driven predictions and range-based risk coverage scenarios.">Market Analysis</span>
+<h2 id="detail-title" class="text-2xl font-semibold tracking-tight">Atlanta ULSD Price Projections</h2>
+</div>
+<div class="text-right">
+<span id="detail-current-price" class="mono text-2xl font-semibold">$3.1420</span>
+<p id="detail-change" class="text-[0.6875rem] font-semibold uppercase tracking-wider text-secondary mt-1">Live Feed • +1.24%</p>
+</div>
+</div>
+<!-- SVG Chart (Static analysis chart) -->
+<div class="relative w-full h-[300px] bg-surface-container-low/30 mb-4">
+<svg class="w-full h-full" viewbox="0 0 800 300">
+<path d="M0,250 L100,230 L200,245 L300,210 L400,180 L500,160 L600,130 L700,110 L800,90 L800,220 L700,240 L600,260 L500,280 L400,290 L0,290 Z" fill="rgba(0, 102, 255, 0.05)"></path>
+<polyline fill="none" points="0,250 100,240 200,235 300,210 400,205 500,180 600,150 700,130 800,105" stroke="#0066ff" stroke-width="2"></polyline>
+<circle cx="0" cy="250" fill="#0066ff" r="3"></circle>
+<circle cx="800" cy="105" fill="#0066ff" r="3"></circle>
+</svg>
+<div class="absolute top-4 left-4 mono text-[10px] text-neutral-400">P90 Projection: $5.09</div>
+<div class="absolute bottom-4 left-4 mono text-[10px] text-neutral-400">P10 Projection: $3.75</div>
+</div>
+</div>
+<!-- 3-Step Explainer -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest p-6 border border-outline-variant/10">
+<div class="w-8 h-8 bg-surface-container flex items-center justify-center text-sm font-bold mb-4">01</div>
+<h4 class="text-sm font-semibold mb-2">Select Strike</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">Choose the ceiling price you want to protect. If market exceeds this, we pay you.</p>
+</div>
+<div class="bg-surface-container-lowest p-6 border border-outline-variant/10">
+<div class="w-8 h-8 bg-surface-container flex items-center justify-center text-sm font-bold mb-4">02</div>
+<h4 class="text-sm font-semibold mb-2">Set Volume</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">Input your expected weekly fuel consumption in gallons for accurate hedging.</p>
+</div>
+<div class="bg-surface-container-lowest p-6 border border-outline-variant/10">
+<div class="w-8 h-8 bg-surface-container flex items-center justify-center text-sm font-bold mb-4">03</div>
+<h4 class="text-sm font-semibold mb-2">Execute Hedge</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">Commit to the contract. Premiums are deducted upfront for total certainty.</p>
+</div>
+</div>
+</div>
+<!-- Order Panel -->
+<aside class="lg:col-span-4 bg-surface-container-lowest border border-outline-variant/20 flex flex-col">
+<div class="p-6 border-b border-outline-variant/10">
+<h3 class="text-sm font-semibold uppercase tracking-wider mb-6">Contract Configuration</h3>
+<div class="space-y-6">
+<div>
+<label class="text-[0.6875rem] font-semibold text-neutral-400 uppercase tracking-wider block mb-2">Hedge Duration</label>
+<div class="flex gap-2">
+<button class="flex-1 py-2 text-[0.6875rem] font-bold border border-primary bg-primary text-on-primary">1 WK</button>
+<button class="flex-1 py-2 text-[0.6875rem] font-bold border border-outline-variant hover:bg-surface-container transition-colors">2 WK</button>
+<button class="flex-1 py-2 text-[0.6875rem] font-bold border border-outline-variant hover:bg-surface-container transition-colors">4 WK</button>
+</div>
+</div>
+<div>
+<label class="text-[0.6875rem] font-semibold text-neutral-400 uppercase tracking-wider block mb-1 info-feature" data-demo-message="Target strike price is your chosen threshold, where payout begins if market exceeds it during contract period.">Target Strike Price</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant py-2 mono focus:ring-0 focus:border-primary text-lg info-feature" step="0.01" type="number" value="3.15" data-demo-message="Set your strike then lock it in. Lower strike => higher premium, stronger protection; higher strike => cheaper, less likely to pay."/>
+</div>
+<div>
+<label class="text-[0.6875rem] font-semibold text-neutral-400 uppercase tracking-wider block mb-1">Volume (Gallons)</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant py-2 mono focus:ring-0 focus:border-primary text-lg" type="number" value="5000"/>
+</div>
+</div>
+</div>
+<div class="p-6 bg-surface-container info-feature" data-demo-message="Premium estimate and payout cap are the key commercial metrics for fleet controllers to approve spend.">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs text-on-surface-variant">Est. Premium</span>
+<span class="mono text-sm">$452.00</span>
+</div>
+<div class="flex justify-between items-center mb-6">
+<span class="text-xs text-on-surface-variant">Max Protection</span>
+<span class="mono text-sm">$12,400.00</span>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 text-[0.6875rem] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity info-feature" data-demo-message="Confirm Hedge Contract finalizes the quote, creates locked protection, and starts the settlement timer">Confirm Hedge Contract</button>
+</div>
+</aside>
+</section>
+<!-- My Contracts View (Initially Hidden) -->
+<section class="hidden space-y-8 section-transition" id="view-contracts">
+<!-- Portfolio Summary Bar -->
+<div class="grid grid-cols-1 md:grid-cols-4 border border-outline-variant/20 bg-surface-container-lowest divide-x divide-outline-variant/10">
+<div class="p-6">
+<span class="text-[0.6875rem] font-semibold text-neutral-500 uppercase tracking-wider block">Net Portfolio Value</span>
+<span class="mono text-2xl font-semibold text-secondary">+$2,145.20</span>
+</div>
+<div class="p-6">
+<span class="text-[0.6875rem] font-semibold text-neutral-500 uppercase tracking-wider block">Active Hedges</span>
+<span class="mono text-2xl font-semibold">3</span>
+</div>
+<div class="p-6">
+<span class="text-[0.6875rem] font-semibold text-neutral-500 uppercase tracking-wider block">Total Gallons Protected</span>
+<span class="mono text-2xl font-semibold">15,000</span>
+</div>
+<div class="p-6">
+<span class="text-[0.6875rem] font-semibold text-neutral-500 uppercase tracking-wider block">Settlement Account</span>
+<span class="mono text-2xl font-semibold">$48,201</span>
+</div>
+</div>
+<!-- Active Contracts Table -->
+<div class="bg-surface-container-lowest border border-outline-variant/20">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-outline-variant/20 bg-surface-container-low">
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Contract ID</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Benchmark</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Strike / Spot</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Status</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500 text-right">Payout</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-low/50">
+<td class="py-5 px-6 mono text-xs">BH-8821-X</td>
+<td class="py-5 px-6">
+<span class="text-sm font-medium">Atlanta ULSD</span>
+</td>
+<td class="py-5 px-6">
+<span class="mono text-xs">$3.10 / <span class="text-secondary">$3.14</span></span>
+</td>
+<td class="py-5 px-6">
+<span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-secondary/10 text-secondary uppercase border border-secondary/20">Triggered</span>
+</td>
+<td class="py-5 px-6 text-right mono text-sm font-semibold text-secondary">+$600.00</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50">
+<td class="py-5 px-6 mono text-xs">BH-8845-Y</td>
+<td class="py-5 px-6">
+<span class="text-sm font-medium">Gulf Coast RBOB</span>
+</td>
+<td class="py-5 px-6">
+<span class="mono text-xs">$2.70 / <span class="text-on-surface-variant">$2.58</span></span>
+</td>
+<td class="py-5 px-6">
+<span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-surface-container-high text-on-surface-variant uppercase border border-outline-variant/30">Active</span>
+</td>
+<td class="py-5 px-6 text-right mono text-sm font-semibold text-on-surface-variant">$0.00</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50">
+<td class="py-5 px-6 mono text-xs">BH-8910-Z</td>
+<td class="py-5 px-6">
+<span class="text-sm font-medium">Chicago Jet Fuel</span>
+</td>
+<td class="py-5 px-6">
+<span class="mono text-xs">$2.90 / <span class="text-secondary">$2.94</span></span>
+</td>
+<td class="py-5 px-6">
+<span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-secondary/10 text-secondary uppercase border border-secondary/20">Triggered</span>
+</td>
+<td class="py-5 px-6 text-right mono text-sm font-semibold text-secondary">+$1,545.20</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- Portfolio Dashboard View (Initially Hidden) -->
+<section class="hidden space-y-8 section-transition" id="view-portfolio">
+    <div class="bg-surface-container-lowest border border-outline-variant/20 p-6">
+        <h2 class="text-xl font-semibold mb-3">Portfolio Performance</h2>
+        <p class="text-sm text-neutral-600 mb-4">This page shows a consolidated view of your hedging programs, cash reserve impact, and P&L risk mitigation.</p>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="p-4 bg-white border border-outline-variant rounded-lg">
+                <p class="text-xs uppercase text-neutral-500">Total hedge capacity</p>
+                <p class="text-2xl font-bold text-secondary">23,400 gal</p>
+            </div>
+            <div class="p-4 bg-white border border-outline-variant rounded-lg">
+                <p class="text-xs uppercase text-neutral-500">Estimated annual volatility saved</p>
+                <p class="text-2xl font-bold text-secondary">$7,800</p>
+            </div>
+            <div class="p-4 bg-white border border-outline-variant rounded-lg">
+                <p class="text-xs uppercase text-neutral-500">Current exposed spend</p>
+                <p class="text-2xl font-bold">$156,200</p>
+            </div>
+            <div class="p-4 bg-white border border-outline-variant rounded-lg">
+                <p class="text-xs uppercase text-neutral-500">Hedges in place</p>
+                <p class="text-2xl font-bold">5 Contracts</p>
+            </div>
+        </div>
+    </div>
+    <div class="bg-surface-container-lowest border border-outline-variant/20 p-6">
+        <h3 class="text-base font-medium">Why this helps</h3>
+        <ul class="list-disc list-inside text-sm text-neutral-700 mt-2">
+            <li>Converts unpredictable diesel price changes into a fixed catch-up payment stream.</li>
+            <li>Prevents 8%-15% margin erosion when diesel spikes above strike levels.</li>
+            <li>Improves fleet bidding confidence on new contracts by reducing fuel expense risk.</li>
+        </ul>
+    </div>
+</section>
+
+</main>
+<!-- Footer -->
+<footer class="bg-[#f9f9f9] dark:bg-neutral-950 w-full py-12 px-8 border-t border-[#c2c6d8]/10">
+<div class="flex flex-col md:flex-row justify-between items-center gap-6 max-w-full mx-auto">
+<div class="flex flex-col gap-2">
+<span class="font-['Inter'] font-bold text-[#1a1c1c] text-lg tracking-tight">BusiHedge</span>
+<p class="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-neutral-500">© 2024 BusiHedge. Precision Fuel Hedging.</p>
+</div>
+<div class="flex items-center gap-8">
+<a class="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 hover:text-[#1a1c1c] dark:hover:text-white transition-colors" href="#">Terms</a>
+<a class="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 hover:text-[#1a1c1c] dark:hover:text-white transition-colors" href="#">Privacy</a>
+<a class="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 hover:text-[#1a1c1c] dark:hover:text-white transition-colors" href="#">Support</a>
+<a class="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 hover:text-[#1a1c1c] dark:hover:text-white transition-colors" href="#">API Documentation</a>
+</div>
+</div>
+</footer>
+<!-- Scripts -->
+<script>
+        const views = {
+            markets: document.getElementById('view-markets'),
+            detail: document.getElementById('view-contract-detail'),
+            contracts: document.getElementById('view-contracts'),
+            portfolio: document.getElementById('view-portfolio')
+        };
+        const heroSection = document.getElementById('hero-chart');
+        const navLinks = document.querySelectorAll('nav a');
+        const fuelButtons = document.querySelectorAll('.fuel-filter');
+        const rangeButtons = document.querySelectorAll('.range-filter');
+        const assetRows = document.querySelectorAll('#view-markets .market-row');
+        const tradeButtons = document.querySelectorAll('.trade-action');
+
+        const detailTitle = document.getElementById('detail-title');
+        const detailCurrentPrice = document.getElementById('detail-current-price');
+        const detailChange = document.getElementById('detail-change');
+
+        const chartPath = document.querySelector('.chart-path');
+        const heroCurrentPriceEl = document.getElementById('hero-current-price');
+        const hero24hChangeEl = document.getElementById('hero-24h-change');
+        let heroCurrentPrice = 3.1420;
+        const heroPathVariants = [
+            'M0,250 C100,240 200,260 300,180 S500,120 600,150 S800,80 1000,100',
+            'M0,250 C100,242 200,258 300,183 S500,126 600,154 S800,86 1000,106',
+            'M0,250 C100,238 200,262 300,178 S500,116 600,146 S800,78 1000,98',
+            'M0,250 C100,244 200,256 300,175 S500,118 600,153 S800,84 1000,102'
+        ];
+        
+        const applyPriceAnimation = (el) => {
+            if (!el) return;
+            el.classList.add('pulse-price');
+            setTimeout(() => el.classList.remove('pulse-price'), 400);
+        };
+
+        const updateHeroLive = () => {
+            if (!heroCurrentPriceEl || !hero24hChangeEl) return;
+            const delta = (Math.random() - 0.5) * 0.02;
+            heroCurrentPrice = Math.max(2.85, Math.min(3.35, heroCurrentPrice + delta));
+            const changeVal = (heroCurrentPrice - 3.1420).toFixed(4);
+            const changePct = ((changeVal / 3.1420) * 100).toFixed(2);
+
+            heroCurrentPriceEl.textContent = `$${heroCurrentPrice.toFixed(4)}`;
+            hero24hChangeEl.textContent = `${changeVal >= 0 ? '+' : ''}${changeVal} (${changePct}%)`;
+            hero24hChangeEl.classList.toggle('text-secondary', changeVal >= 0);
+            hero24hChangeEl.classList.toggle('text-error', changeVal < 0);
+
+            if (chartPath) {
+                chartPath.setAttribute('d', heroPathVariants[Math.floor(Math.random() * heroPathVariants.length)]);
+            }
+
+            applyPriceAnimation(heroCurrentPriceEl);
+            applyPriceAnimation(hero24hChangeEl);
+        };
+
+        setInterval(updateHeroLive, 2000);
+
+        const demoButton = document.getElementById('demo-mode-btn');
+        const demoTooltip = document.createElement('div');
+        demoTooltip.id = 'demo-tooltip-overlay';
+        demoTooltip.style.cssText = 'position:fixed;right:1rem;top:4.5rem;z-index:999;max-width:320px;padding:10px 12px;background:#ffffff;border:1px solid rgba(31,41,55,0.17);border-radius:10px;box-shadow:0 12px 24px rgba(15,23,42,0.12);font-size:0.76rem;color:#111827;line-height:1.35;display:none;';
+        demoTooltip.textContent = '';
+        document.body.appendChild(demoTooltip);
+        let demoMode = false;
+
+        const assetData = {
+            'Atlanta Ultra-Low Sulfur Diesel': {
+                page: 'Market Insights — Atlanta ULSD',
+                title: 'Atlanta ULSD Price Projections',
+                current: 3.1420,
+                change: '+1.24%',
+                path: 'M0,250 C100,240 200,260 300,180 S500,120 600,150 S800,80 1000,100'
+            },
+            'Gulf Coast RBOB Gasoline': {
+                page: 'Market Insights — Gulf Coast RBOB',
+                title: 'Gulf Coast RBOB Price Projections',
+                current: 2.5892,
+                change: '-0.45%',
+                path: 'M0,260 C100,250 200,240 300,190 S500,150 600,170 S800,140 1000,150'
+            },
+            'Chicago Jet Fuel': {
+                page: 'Market Insights — Chicago Jet',
+                title: 'Chicago Jet Fuel Price Projections',
+                current: 2.9411,
+                change: '+0.12%',
+                path: 'M0,245 C120,235 240,230 360,210 S500,175 640,145 S780,125 1000,110'
+            }
+        };
+
+        const rangeData = {
+            '1D': 'M0,250 C100,240 200,260 300,180 S500,120 600,150 S800,80 1000,100',
+            '1W': 'M0,260 C100,250 200,240 300,190 S500,150 600,170 S800,140 1000,150',
+            '1M': 'M0,240 C100,230 200,220 300,180 S500,130 600,160 S800,110 1000,120',
+            'YTD': 'M0,245 C150,220 300,230 450,195 S600,130 750,120 900,130 1000,125'
+        };
+
+        function showToast(message) {
+            let toast = document.getElementById('demo-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'demo-toast';
+                toast.style.cssText = 'position:fixed;bottom:24px;right:24px;padding:12px 16px;background:#0f172a;color:#fff;border-radius:8px;box-shadow:0 8px 20px rgba(15,23,42,.35);z-index:999;opacity:0;transition:opacity .25s ease';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 1600);
+        }
+
+        const demoSidebar = document.getElementById('demo-sidebar');
+        const demoSidebarClose = document.getElementById('demo-sidebar-close');
+
+        function openDemoSidebar() {
+            demoSidebar.classList.remove('translate-x-full');
+        }
+
+        function closeDemoSidebar() {
+            demoSidebar.classList.add('translate-x-full');
+        }
+
+        function setDemoMode(on) {
+            demoMode = on;
+            document.body.classList.toggle('demo-active', demoMode);
+            demoButton.textContent = demoMode ? 'Demo Mode: ON' : 'Demo Mode';
+            if (!demoMode) {
+                demoTooltip.style.display = 'none';
+                closeDemoSidebar();
+            } else {
+                openDemoSidebar();
+            }
+        }
+
+        demoSidebarClose.addEventListener('click', () => {
+            closeDemoSidebar();
+            showToast('Demo Mode details hidden (Demo Mode still active)');
+        });
+
+        function attachDemoHover() {
+            document.querySelectorAll('.info-feature').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    if (!demoMode) return;
+                    const msg = el.dataset.demoMessage || 'Key BusiHedge feature';
+                    demoTooltip.textContent = msg;
+                    const rect = el.getBoundingClientRect();
+                    const top = Math.min(window.innerHeight - 100, rect.bottom + 8);
+                    demoTooltip.style.top = `${top}px`;
+                    demoTooltip.style.left = `${Math.max(12, rect.left)}px`;
+                    demoTooltip.style.display = 'block';
+                });
+                el.addEventListener('mouseleave', () => {
+                    if (!demoMode) return;
+                    demoTooltip.style.display = 'none';
+                });
+            });
+        }
+
+        demoButton.addEventListener('mouseenter', () => {
+            if (demoMode) return;
+            demoTooltip.textContent = 'Demo mode highlights key controls, explains each step, and runs simulated live pricing for your pilot flow.';
+            const rect = demoButton.getBoundingClientRect();
+            demoTooltip.style.top = `${rect.bottom + 8}px`;
+            demoTooltip.style.left = `${Math.max(12, rect.left)}px`;
+            demoTooltip.style.display = 'block';
+        });
+
+        demoButton.addEventListener('mouseleave', () => {
+            demoTooltip.style.display = 'none';
+        });
+
+        demoButton.addEventListener('click', () => {
+            demoTooltip.style.display = 'none';
+            setDemoMode(!demoMode);
+            showToast(demoMode ? 'Demo Mode enabled' : 'Demo Mode disabled');
+        });
+
+        attachDemoHover();
+
+        function animateSwitch(fromEl, toEl) {
+            if (fromEl && fromEl !== toEl && !fromEl.classList.contains('hidden')) {
+                fromEl.classList.add('slide-exit');
+                fromEl.addEventListener('animationend', () => {
+                    fromEl.classList.add('hidden');
+                    fromEl.classList.remove('slide-exit');
+                }, { once: true });
+            }
+            if (toEl && toEl.classList.contains('hidden')) {
+                toEl.classList.remove('hidden');
+                toEl.classList.add('slide-enter');
+                toEl.addEventListener('animationend', () => {
+                    toEl.classList.remove('slide-enter');
+                }, { once: true });
+            }
+        }
+
+        function switchView(target) {
+            const active = Object.values(views).find(v => !v.classList.contains('hidden')) || null;
+            animateSwitch(active, views[target]);
+
+            if (target === 'markets') {
+                heroSection.classList.remove('hidden');
+                heroSection.classList.add('slide-enter');
+                heroSection.addEventListener('animationend', () => heroSection.classList.remove('slide-enter'), { once: true });
+            } else if (!heroSection.classList.contains('hidden')) {
+                heroSection.classList.add('slide-exit');
+                heroSection.addEventListener('animationend', () => {
+                    heroSection.classList.add('hidden');
+                    heroSection.classList.remove('slide-exit');
+                }, { once: true });
+            }
+
+            navLinks.forEach(link => {
+                link.classList.remove('text-[#0066ff]', 'border-b-2', 'border-[#0066ff]', 'pb-4', '-mb-[17px]', 'font-medium');
+                link.classList.add('text-[#1a1c1c]', 'dark:text-neutral-400');
+                const navKey = link.textContent.toLowerCase();
+                if ((target === 'detail' && navKey.includes('markets')) ||
+                    (target === 'contracts' && navKey.includes('contracts')) ||
+                    (target === 'portfolio' && navKey.includes('portfolio')) ||
+                    (target === 'markets' && navKey.includes('markets'))) {
+                    link.classList.add('text-[#0066ff]', 'border-b-2', 'border-[#0066ff]', 'pb-4', '-mb-[17px]', 'font-medium');
+                    link.classList.remove('text-[#1a1c1c]', 'dark:text-neutral-400');
+                }
+            });
+        }
+
+        function setDetail(assetKey) {
+            const data = assetData[assetKey];
+            if (!data) return;
+            detailTitle.textContent = data.title;
+            detailCurrentPrice.textContent = `$${data.current.toFixed(4)}`;
+            detailChange.textContent = `Live Feed • ${data.change}`;
+            if (chartPath) chartPath.setAttribute('d', data.path);
+            switchView('detail');
+        }
+
+        function setRange(rangeKey) {
+            rangeButtons.forEach(btn => {
+                btn.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
+            });
+            const btn = Array.from(rangeButtons).find(b => b.dataset.range === rangeKey);
+            if (btn) {
+                btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
+            }
+            const d = rangeData[rangeKey] || rangeData['1D'];
+            if (chartPath) chartPath.setAttribute('d', d);
+        }
+
+        function setFuelFilter(filter) {
+            fuelButtons.forEach(btn => {
+                btn.classList.remove('border-primary', 'bg-primary', 'text-on-primary');
+                btn.classList.add('border-outline-variant', 'text-on-surface-variant');
+            });
+            const btn = Array.from(fuelButtons).find(b => b.dataset.filter === filter);
+            if (btn) {
+                btn.classList.remove('border-outline-variant', 'text-on-surface-variant');
+                btn.classList.add('border-primary', 'bg-primary', 'text-on-primary');
+            }
+
+            const map = {
+                'All Fuels': [...assetRows],
+                'Diesel': [...assetRows].filter(r => r.dataset.asset === 'Atlanta Ultra-Low Sulfur Diesel'),
+                'Gasoline': [...assetRows].filter(r => r.dataset.asset === 'Gulf Coast RBOB Gasoline'),
+                'Jet Fuel': [...assetRows].filter(r => r.dataset.asset === 'Chicago Jet Fuel')
+            };
+            assetRows.forEach(r => r.style.display = 'none');
+            (map[filter] || map['All Fuels']).forEach(r => r.style.display = 'table-row');
+        }
+
+        function bindEvents() {
+            assetRows.forEach(row => {
+                row.addEventListener('click', () => setDetail(row.dataset.asset));
+            });
+            tradeButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const row = e.target.closest('tr.market-row');
+                    if (row) setDetail(row.dataset.asset);
+                });
+            });
+            fuelButtons.forEach(btn => {
+                btn.addEventListener('click', () => setFuelFilter(btn.dataset.filter));
+            });
+            rangeButtons.forEach(btn => {
+                btn.addEventListener('click', () => setRange(btn.dataset.range));
+            });
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const text = link.textContent.toLowerCase();
+                    if (text.includes('markets')) switchView('markets');
+                    if (text.includes('contracts')) switchView('contracts');
+                    if (text.includes('portfolio')) switchView('portfolio');
+                });
+            });
+
+            const confirmButton = document.querySelector('#view-contract-detail button.w-full');
+            if (confirmButton) {
+                confirmButton.addEventListener('click', () => {
+                    showToast('Hedge contract confirmed. Settlement scheduled.');
+                    switchView('contracts');
+                });
+            }
+        }
+
+        bindEvents();
+        setDemoMode(false);
+        setFuelFilter('All Fuels');
+        setRange('1D');
+        switchView('markets');
+
+        // Existing chart hover logic remains in place
+        const chartArea = document.querySelector('.chart-area');
+        const vLine = document.getElementById('v-line');
+        const tooltip = document.getElementById('chart-tooltip');
+        const tooltipPrice = document.getElementById('tooltip-price');
+        const tooltipDate = document.getElementById('tooltip-date');
+        const linePath = document.querySelector('.chart-path');
+        const pathLength = linePath ? linePath.getTotalLength() : 0;
+
+        const chartPriceTop = 3.50;
+        const chartPriceBottom = 2.75;
+
+        chartArea.addEventListener('mousemove', (e) => {
+            const rect = chartArea.getBoundingClientRect();
+            const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+            const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
+
+            const svgX = (x / rect.width) * 1000;
+            vLine.setAttribute('x1', svgX);
+            vLine.setAttribute('x2', svgX);
+            vLine.setAttribute('y1', 0);
+            vLine.setAttribute('y2', 300);
+
+            let price = 0;
+            if (linePath && pathLength > 0) {
+                const pointOnPath = linePath.getPointAtLength(Math.min(pathLength, Math.max(0, (x / rect.width) * pathLength)));
+                const normalizedY = 1 - (pointOnPath.y / 300);
+                price = chartPriceBottom + normalizedY * (chartPriceTop - chartPriceBottom);
+            } else {
+                const basePrice = 2.80;
+                price = basePrice + Math.sin(svgX / 100) * 0.4 + (svgX / 1000) * 0.3;
+            }
+
+            tooltip.style.left = `${x + 15}px`;
+            tooltip.style.top = `${Math.max(20, y - 45)}px`;
+
+            tooltipPrice.textContent = `$${price.toFixed(4)}`;
+
+            const months = ['OCT', 'NOV', 'DEC', 'JAN', 'FEB', 'MAR'];
+            const monthIdx = Math.min(Math.floor((svgX / 1000) * months.length), months.length - 1);
+            const day = Math.floor((svgX % (1000 / months.length)) / (1000 / (months.length * 30))) + 1;
+            tooltipDate.textContent = `${months[monthIdx]} ${day < 10 ? '0' + day : day}, 09:00 AM`;
+        });
+</script>
+</body></html>
