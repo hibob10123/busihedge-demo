@@ -118,6 +118,58 @@
         .card-hover-smooth { transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }
         .card-hover-smooth:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06); border-color: rgba(99, 102, 241, 0.24); }
 
+        /* Markets grid — Polymarket-adjacent tiles */
+        .markets-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1.125rem;
+        }
+        @media (min-width: 1280px) {
+            .markets-grid { gap: 1.25rem; }
+        }
+        @media (max-width: 1279px) {
+            .markets-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        @media (max-width: 900px) {
+            .markets-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 520px) {
+            .markets-grid { grid-template-columns: 1fr; }
+        }
+        .market-card {
+            cursor: pointer;
+            border-radius: 0.625rem;
+            transition:
+                transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 220ms ease,
+                border-color 220ms ease,
+                background-color 220ms ease;
+        }
+        .market-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.09);
+            border-color: rgba(0, 102, 255, 0.28);
+        }
+        .market-card:active {
+            transform: translateY(-1px) scale(0.995);
+            transition-duration: 120ms;
+        }
+        .market-card:focus-visible {
+            outline: 2px solid #0066ff;
+            outline-offset: 2px;
+        }
+        .market-search-wrap:focus-within {
+            border-color: rgba(0, 102, 255, 0.45);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.12);
+        }
+        /* Light interactive affordance — not toy-like */
+        a, button, .market-card, .fuel-filter, .range-filter, .duration-btn, nav a, #back-to-markets {
+            transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+        }
+        button:active:not(:disabled), .fuel-filter:active, .range-filter:active {
+            transform: scale(0.985);
+        }
+
         @keyframes hero-price-pulse {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.05); opacity: 0.85; }
@@ -141,9 +193,9 @@
             background: #0284c7 !important;
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.24);
         }
-        .demo-active .market-row {
-            border-color: rgba(6, 95, 276, 0.15);
-            background: rgba(56, 189, 248, 0.05);
+        .demo-active .market-card {
+            border-color: rgba(6, 95, 276, 0.22);
+            background: rgba(56, 189, 248, 0.06);
         }
         .demo-active .card,
         .demo-active .bg-surface-container-highest {
@@ -171,7 +223,7 @@
 
         @media (max-width: 768px) {
             .chart-area { height: 240px !important; }
-            .market-row td { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .market-card { padding: 1rem !important; }
             .fuel-filter { flex: 1 1 auto; min-width: 120px; }
             .range-filter { flex: 1 1 40%; min-width: 110px; margin-bottom: 0.375rem; }
             .range-filter:first-child { margin-top: 0.25rem; }
@@ -203,6 +255,11 @@
         html.dark .border-outline-variant { border-color: #334155 !important; }
         html.dark [class*="divide-outline-variant"] > * { border-color: #334155 !important; }
         html.dark [class*="border-outline-variant"] { border-color: #334155 !important; }
+
+        html.dark .market-card:hover {
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+            border-color: rgba(96, 165, 250, 0.35);
+        }
 
         /* The hero chart card (arbitrary bg class) */
         html.dark #hero-chart > div { background-color: #1e293b !important; border-color: #334155 !important; }
@@ -389,109 +446,221 @@
 </div>
 </section>
 <!-- Markets View (Active) -->
-<section class="space-y-8 section-transition" id="view-markets">
-<header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<section class="space-y-6 section-transition" id="view-markets">
+<header class="space-y-5">
+<div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
 <div>
 <h1 class="text-[1.5rem] font-medium tracking-tight text-on-surface info-feature" data-demo-message="Market listing shows hedging products by benchmark and strike ladder; helps clients pick coverage that matches their fleet fuel mix.">Available Markets</h1>
-<p class="text-on-surface-variant text-sm mt-1">Real-time fuel benchmarks and hedging strikes.</p>
+<p class="text-on-surface-variant text-sm mt-1">Real-time fuel benchmarks and hedging strikes — browse by region or fuel type.</p>
 </div>
-<div class="flex items-center gap-2">
+<div class="flex flex-wrap items-center gap-2">
 <button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-primary bg-primary text-on-primary info-feature" data-filter="All Fuels" data-demo-message="Show all available hedges so you can compare options and quickly choose the best fit for your fleet's usage." >All Fuels</button>
 <button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-surface-container transition-colors text-on-surface-variant info-feature" data-filter="Diesel" data-demo-message="Diesel filter focuses the list on your most important freight fuel contract">Diesel</button>
 <button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-surface-container transition-colors text-on-surface-variant info-feature" data-filter="Gasoline" data-demo-message="Gasoline filter shows contracts if your fleet uses mixed fuels, ensuring you don't over-hedge or miss opportunities." >Gasoline</button>
 <button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-surface-container transition-colors text-on-surface-variant info-feature" data-filter="Jet Fuel" data-demo-message="Jet Fuel filter is for last-mile or heavy equipment users needing aviation-grade fuel risk cover." >Jet Fuel</button>
 </div>
+</div>
+<div role="search" class="market-search-wrap flex items-center gap-2 rounded-lg border border-outline-variant/35 bg-surface-container-lowest px-3 py-2.5 transition-shadow cursor-text">
+<span class="material-symbols-outlined text-on-surface-variant text-[1.35rem] shrink-0 select-none" aria-hidden="true">search</span>
+<input type="search" id="market-search" autocomplete="off" placeholder="Search markets by region, city, or benchmark…" aria-label="Search markets" class="min-w-0 flex-1 bg-transparent border-0 p-0 text-sm text-on-surface placeholder:text-neutral-500 focus:ring-0 dark:placeholder:text-neutral-500"/>
+</div>
 </header>
-<!-- Market Table -->
-<div class="bg-surface-container-lowest border border-outline-variant/20 overflow-x-auto">
-<table class="w-full min-w-[900px] text-left border-collapse">
-<thead>
-<tr class="border-b border-outline-variant/20 bg-surface-container-low">
-<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Benchmark Asset</th>
-<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Current Price</th>
-<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">24h Change</th>
-<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500 info-feature" data-demo-message="Strike ladder shows trigger levels; the closer current price is to a strike, the higher the chance of payout, letting you choose cost vs. protection tradeoffs.">Strike Ladder (Visual)</th>
-<th class="py-4 px-6 text-right"></th>
-</tr>
-</thead>
-<tbody class="divide-y divide-outline-variant/10">
-<tr class="market-row hover:bg-surface-container-low transition-colors cursor-pointer group" data-asset="Atlanta Ultra-Low Sulfur Diesel">
-<td class="py-5 px-6">
-<div class="flex flex-col">
-<span class="text-sm font-semibold">Atlanta Ultra-Low Sulfur Diesel</span>
-<span class="text-xs text-on-surface-variant">FOB Pipeline • Spot</span>
+<div id="markets-grid-wrap">
+<div class="markets-grid" id="markets-grid">
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none info-feature" data-demo-message="Strike ladder shows trigger levels; the closer current price is to a strike, the higher the chance of payout, letting you choose cost vs. protection tradeoffs." data-asset="Atlanta Ultra-Low Sulfur Diesel" data-fuel="Diesel" data-region="Southeast" data-keywords="atlanta georgia southeast south diesel">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Southeast</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Atlanta Ultra-Low Sulfur Diesel</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">FOB Pipeline · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$3.1420</span>
+<span class="mono text-xs font-medium text-secondary">+1.24%</span>
 </div>
-</td>
-<td class="py-5 px-6">
-<span class="mono text-md font-medium">$3.1420</span>
-</td>
-<td class="py-5 px-6">
-<span class="mono text-sm text-secondary">+1.24%</span>
-</td>
-<td class="py-5 px-6">
-<div class="flex items-center gap-1">
-<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px] info-feature" data-demo-message="Strike level: if market price exceeds this, payout is triggered. Choose a higher strike for lower premium and less frequent protection.">$3.10</div>
-<div class="h-6 w-10 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary info-feature" data-demo-message="Your chosen strike zone (highlighted) is the protection target. This is the price threshold in your hedging contract.">$3.15</div>
-<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px] info-feature" data-demo-message="Strike has a payout delta: $3.20 has more cost but higher chance of being in-the-money if market surges.">$3.20</div>
-<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px] info-feature" data-demo-message="High strike like $3.25 is conservative protection with lowest premium, for cautious cashflow managers.">$3.25</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.10</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.15</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.20</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.25</span>
 </div>
-</td>
-<td class="py-5 px-6 text-right">
-<button class="px-4 py-2 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant transition-colors trade-action info-feature" data-demo-message="Trade launches contract flow; this is where you lock in protection and convert exposure to budget certainty">Trade</button>
-</td>
-</tr>
-<tr class="market-row hover:bg-surface-container-low transition-colors cursor-pointer" data-asset="Gulf Coast RBOB Gasoline">
-<td class="py-5 px-6">
-<div class="flex flex-col">
-<span class="text-sm font-semibold">Gulf Coast RBOB Gasoline</span>
-<span class="text-xs text-on-surface-variant">M Grade • Spot</span>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant info-feature" data-demo-message="Trade launches contract flow; this is where you lock in protection and convert exposure to budget certainty">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Gulf Coast RBOB Gasoline" data-fuel="Gasoline" data-region="Gulf Coast" data-keywords="gulf coast houston texas gasoline rbob">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Gulf Coast</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Gulf Coast RBOB Gasoline</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">M Grade · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$2.5892</span>
+<span class="mono text-xs font-medium text-error">-0.45%</span>
 </div>
-</td>
-<td class="py-5 px-6">
-<span class="mono text-md font-medium">$2.5892</span>
-</td>
-<td class="py-5 px-6">
-<span class="mono text-sm text-error">-0.45%</span>
-</td>
-<td class="py-5 px-6">
-<div class="flex items-center gap-1">
-<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.50</div>
-<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.55</div>
-<div class="h-6 w-10 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$2.60</div>
-<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.65</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.50</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.55</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$2.60</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.65</span>
 </div>
-</td>
-<td class="py-5 px-6 text-right">
-<button class="px-4 py-2 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider trade-action">Trade</button>
-</td>
-</tr>
-<tr class="market-row hover:bg-surface-container-low transition-colors cursor-pointer" data-asset="Chicago Jet Fuel">
-<td class="py-5 px-6">
-<div class="flex flex-col">
-<span class="text-sm font-semibold">Chicago Jet Fuel</span>
-<span class="text-xs text-on-surface-variant">Regular • Spot</span>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Chicago Jet Fuel" data-fuel="Jet Fuel" data-region="Midwest" data-keywords="chicago illinois midwest jet">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Midwest</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Chicago Jet Fuel</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Regular · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$2.9411</span>
+<span class="mono text-xs font-medium text-secondary">+0.12%</span>
 </div>
-</td>
-<td class="py-5 px-6">
-<span class="mono text-md font-medium">$2.9411</span>
-</td>
-<td class="py-5 px-6">
-<span class="mono text-sm text-secondary">+0.12%</span>
-</td>
-<td class="py-5 px-6">
-<div class="flex items-center gap-1">
-<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.90</div>
-<div class="h-6 w-10 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$2.95</div>
-<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.00</div>
-<div class="h-6 w-10 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.05</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.90</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$2.95</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.00</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.05</span>
 </div>
-</td>
-<td class="py-5 px-6 text-right">
-<button class="px-4 py-2 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider trade-action">Trade</button>
-</td>
-</tr>
-</tbody>
-</table>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="New York Harbor ULSD" data-fuel="Diesel" data-region="Northeast" data-keywords="new york harbor ny nj barge northeast ulsd">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Northeast</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">New York Harbor ULSD</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Barge · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$3.0891</span>
+<span class="mono text-xs font-medium text-secondary">+0.88%</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.02</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.08</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.20</span>
+</div>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Los Angeles CARB Diesel" data-fuel="Diesel" data-region="West Coast" data-keywords="los angeles la california carb west coast">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">West Coast</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Los Angeles CARB Diesel</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Pipeline · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$3.2645</span>
+<span class="mono text-xs font-medium text-secondary">+0.31%</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.18</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.24</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.30</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.38</span>
+</div>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Dallas Group 3 ULSD" data-fuel="Diesel" data-region="Southwest" data-keywords="dallas texas group 3 oklahoma southwest">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Southwest</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Dallas Group 3 ULSD</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Group 3 · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$3.0188</span>
+<span class="mono text-xs font-medium text-error">-0.19%</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.95</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.02</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.08</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
+</div>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Denver Ultra-Low Sulfur Diesel" data-fuel="Diesel" data-region="Mountain" data-keywords="denver colorado rocky mountain front range">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Mountain</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Denver Ultra-Low Sulfur Diesel</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Pipeline · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$3.1950</span>
+<span class="mono text-xs font-medium text-secondary">+0.67%</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.12</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.18</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.24</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.32</span>
+</div>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Seattle Harbor ULSD" data-fuel="Diesel" data-region="Pacific Northwest" data-keywords="seattle washington portland pnw pacific northwest nw cascadia">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Pacific NW</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Seattle Harbor ULSD</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Waterborne · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$3.2240</span>
+<span class="mono text-xs font-medium text-secondary">+0.41%</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.20</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.28</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.34</span>
+</div>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Boston Harbor ULSD" data-fuel="Diesel" data-region="Northeast" data-keywords="boston massachusetts new england harbor">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Northeast</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Boston Harbor ULSD</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Barge · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$3.1122</span>
+<span class="mono text-xs font-medium text-secondary">+0.55%</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.04</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.10</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.16</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.22</span>
+</div>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Miami OPIS ULSD" data-fuel="Diesel" data-region="Southeast" data-keywords="miami florida south atlantic cargo">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Southeast</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Miami OPIS ULSD</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Cargo · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$3.1788</span>
+<span class="mono text-xs font-medium text-secondary">+1.02%</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.10</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.16</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.22</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.28</span>
+</div>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Detroit Ultra-Low Sulfur Diesel" data-fuel="Diesel" data-region="Midwest" data-keywords="detroit michigan great lakes midwest">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Midwest</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Detroit Ultra-Low Sulfur Diesel</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Pipeline · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$3.0566</span>
+<span class="mono text-xs font-medium text-secondary">+0.08%</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.98</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.04</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.10</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.18</span>
+</div>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+<article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Houston Gulf ULSD" data-fuel="Diesel" data-region="Gulf Coast" data-keywords="houston texas ship channel gulf waterborne">
+<span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Gulf Coast</span>
+<h2 class="text-sm font-semibold text-on-surface mt-2 leading-snug">Houston Gulf ULSD</h2>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Waterborne · Spot</p>
+<div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+<span class="mono text-lg font-medium text-on-surface">$3.0334</span>
+<span class="mono text-xs font-medium text-error">-0.22%</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-0.5">
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.96</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.02</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.08</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
+</div>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+</article>
+</div>
+<p id="markets-empty" class="hidden text-center text-sm text-on-surface-variant py-14 border border-dashed border-outline-variant/30 rounded-lg bg-surface-container-lowest/50">No markets match your search. Try another region, city, or fuel type.</p>
 </div>
 </section>
 <!-- Contract Detail View (Initially Hidden) -->
@@ -800,8 +969,11 @@
         const mobileNav = document.getElementById('mobile-nav');
         const fuelButtons = document.querySelectorAll('.fuel-filter');
         const rangeButtons = document.querySelectorAll('.range-filter');
-        const assetRows = document.querySelectorAll('#view-markets .market-row');
-        const tradeButtons = document.querySelectorAll('.trade-action');
+        const marketCardsList = document.querySelectorAll('#markets-grid .market-card');
+        const marketSearchInput = document.getElementById('market-search');
+        const marketsEmptyEl = document.getElementById('markets-empty');
+        let currentFuelFilter = 'All Fuels';
+        const tradeButtons = document.querySelectorAll('#markets-grid .trade-action');
 
         if (mobileMenuBtn && mobileNav) {
             mobileMenuBtn.addEventListener('click', () => {
@@ -920,6 +1092,186 @@
                 ],
                 defaultStrike: 1,
                 path: 'M0,245 C120,235 240,230 360,210 S500,175 640,145 S780,125 1000,110'
+            },
+            'New York Harbor ULSD': {
+                title: 'New York Harbor Diesel — Week of Mar 31, 2026',
+                contractId: 'NE-DSL-2026-14',
+                meta: 'Settlement: OPIS NY Harbor Barge · Closing: Mar 30, 2026',
+                current: 3.0891, change: '+0.88%',
+                settlementDate: 'Apr 03, 2026',
+                histPath: 'M0,175 L80,172 L160,168 L240,162 L320,155 L400,148',
+                forecastPath: 'M400,148 L480,138 L560,125 L640,112 L720,98 L800,88',
+                forecastBand: 'M400,148 L480,132 L560,118 L640,105 L720,92 L800,82 L800,158 L720,168 L640,178 L560,185 L480,190 L400,148 Z',
+                yTop: 3.45, yBot: 2.85,
+                yLabels: ['$3.45', '$3.15', '$2.85'],
+                strikes: [
+                    { label: '$2.98', prob: '80%', cost: 0.17, vol: '480,000' },
+                    { label: '$3.08', prob: '63%', cost: 0.11, vol: '330,000', recommended: true },
+                    { label: '$3.18', prob: '46%', cost: 0.07, vol: '210,000' },
+                    { label: '$3.28', prob: '29%', cost: 0.04, vol: '95,000' },
+                ],
+                defaultStrike: 1,
+                path: 'M0,248 C110,238 220,232 330,215 S500,180 620,155 S760,130 1000,118'
+            },
+            'Los Angeles CARB Diesel': {
+                title: 'Los Angeles CARB Diesel — Week of Mar 31, 2026',
+                contractId: 'WC-DSL-2026-14',
+                meta: 'Settlement: OPIS LA CARB · Closing: Mar 30, 2026',
+                current: 3.2645, change: '+0.31%',
+                settlementDate: 'Apr 03, 2026',
+                histPath: 'M0,165 L80,162 L160,158 L240,150 L320,142 L400,128',
+                forecastPath: 'M400,128 L480,118 L560,105 L640,92 L720,82 L800,72',
+                forecastBand: 'M400,128 L480,112 L560,98 L640,85 L720,75 L800,65 L800,145 L720,152 L640,162 L560,172 L480,178 L400,128 Z',
+                yTop: 3.55, yBot: 2.95,
+                yLabels: ['$3.55', '$3.25', '$2.95'],
+                strikes: [
+                    { label: '$3.12', prob: '79%', cost: 0.19, vol: '460,000' },
+                    { label: '$3.24', prob: '62%', cost: 0.13, vol: '320,000', recommended: true },
+                    { label: '$3.34', prob: '44%', cost: 0.08, vol: '195,000' },
+                    { label: '$3.45', prob: '26%', cost: 0.04, vol: '88,000' },
+                ],
+                defaultStrike: 1,
+                path: 'M0,242 C130,228 260,220 390,198 S520,165 650,138 S780,108 1000,95'
+            },
+            'Dallas Group 3 ULSD': {
+                title: 'Dallas Group 3 Diesel — Week of Mar 31, 2026',
+                contractId: 'SW-DSL-2026-14',
+                meta: 'Settlement: OPIS Group 3 · Closing: Mar 30, 2026',
+                current: 3.0188, change: '-0.19%',
+                settlementDate: 'Apr 03, 2026',
+                histPath: 'M0,182 L80,180 L160,175 L240,178 L320,168 L400,162',
+                forecastPath: 'M400,162 L480,152 L560,142 L640,132 L720,122 L800,115',
+                forecastBand: 'M400,162 L480,148 L560,135 L640,125 L720,115 L800,108 L800,178 L720,185 L640,192 L560,198 L480,202 L400,162 Z',
+                yTop: 3.35, yBot: 2.75,
+                yLabels: ['$3.35', '$3.05', '$2.75'],
+                strikes: [
+                    { label: '$2.92', prob: '81%', cost: 0.16, vol: '470,000' },
+                    { label: '$3.02', prob: '64%', cost: 0.10, vol: '325,000', recommended: true },
+                    { label: '$3.12', prob: '47%', cost: 0.07, vol: '200,000' },
+                    { label: '$3.22', prob: '30%', cost: 0.04, vol: '92,000' },
+                ],
+                defaultStrike: 1,
+                path: 'M0,252 C105,242 210,236 315,218 S480,188 590,162 S720,142 1000,128'
+            },
+            'Denver Ultra-Low Sulfur Diesel': {
+                title: 'Denver Diesel — Week of Mar 31, 2026',
+                contractId: 'MT-DSL-2026-14',
+                meta: 'Settlement: OPIS Denver Pipeline · Closing: Mar 30, 2026',
+                current: 3.1950, change: '+0.67%',
+                settlementDate: 'Apr 03, 2026',
+                histPath: 'M0,170 L80,168 L160,162 L240,158 L320,148 L400,135',
+                forecastPath: 'M400,135 L480,125 L560,112 L640,100 L720,90 L800,80',
+                forecastBand: 'M400,135 L480,120 L560,105 L640,92 L720,82 L800,72 L800,152 L720,160 L640,170 L560,178 L480,185 L400,135 Z',
+                yTop: 3.50, yBot: 2.90,
+                yLabels: ['$3.50', '$3.20', '$2.90'],
+                strikes: [
+                    { label: '$3.08', prob: '78%', cost: 0.18, vol: '445,000' },
+                    { label: '$3.18', prob: '61%', cost: 0.12, vol: '300,000', recommended: true },
+                    { label: '$3.28', prob: '43%', cost: 0.08, vol: '185,000' },
+                    { label: '$3.38', prob: '25%', cost: 0.04, vol: '82,000' },
+                ],
+                defaultStrike: 1,
+                path: 'M0,246 C118,234 236,226 354,205 S500,172 618,148 S736,118 1000,102'
+            },
+            'Seattle Harbor ULSD': {
+                title: 'Seattle Harbor Diesel — Week of Mar 31, 2026',
+                contractId: 'PN-DSL-2026-14',
+                meta: 'Settlement: OPIS Seattle Waterborne · Closing: Mar 30, 2026',
+                current: 3.2240, change: '+0.41%',
+                settlementDate: 'Apr 03, 2026',
+                histPath: 'M0,168 L80,165 L160,160 L240,152 L320,145 L400,132',
+                forecastPath: 'M400,132 L480,120 L560,108 L640,95 L720,85 L800,75',
+                forecastBand: 'M400,132 L480,115 L560,100 L640,88 L720,78 L800,68 L800,150 L720,158 L640,168 L560,175 L480,182 L400,132 Z',
+                yTop: 3.52, yBot: 2.92,
+                yLabels: ['$3.52', '$3.22', '$2.92'],
+                strikes: [
+                    { label: '$3.10', prob: '77%', cost: 0.18, vol: '430,000' },
+                    { label: '$3.20', prob: '60%', cost: 0.12, vol: '295,000', recommended: true },
+                    { label: '$3.30', prob: '42%', cost: 0.08, vol: '175,000' },
+                    { label: '$3.40', prob: '24%', cost: 0.04, vol: '78,000' },
+                ],
+                defaultStrike: 1,
+                path: 'M0,244 C125,230 250,222 375,200 S500,168 625,142 S750,112 1000,98'
+            },
+            'Boston Harbor ULSD': {
+                title: 'Boston Harbor Diesel — Week of Mar 31, 2026',
+                contractId: 'BO-DSL-2026-14',
+                meta: 'Settlement: OPIS Boston Barge · Closing: Mar 30, 2026',
+                current: 3.1122, change: '+0.55%',
+                settlementDate: 'Apr 03, 2026',
+                histPath: 'M0,176 L80,174 L160,170 L240,165 L320,158 L400,150',
+                forecastPath: 'M400,150 L480,140 L560,128 L640,115 L720,105 L800,95',
+                forecastBand: 'M400,150 L480,135 L560,120 L640,108 L720,98 L800,88 L800,165 L720,172 L640,180 L560,188 L480,194 L400,150 Z',
+                yTop: 3.40, yBot: 2.80,
+                yLabels: ['$3.40', '$3.10', '$2.80'],
+                strikes: [
+                    { label: '$2.98', prob: '79%', cost: 0.17, vol: '455,000' },
+                    { label: '$3.10', prob: '62%', cost: 0.11, vol: '315,000', recommended: true },
+                    { label: '$3.20', prob: '45%', cost: 0.07, vol: '198,000' },
+                    { label: '$3.30', prob: '28%', cost: 0.04, vol: '90,000' },
+                ],
+                defaultStrike: 1,
+                path: 'M0,249 C112,238 224,232 336,212 S480,182 592,158 S704,132 1000,115'
+            },
+            'Miami OPIS ULSD': {
+                title: 'Miami Diesel — Week of Mar 31, 2026',
+                contractId: 'MI-DSL-2026-14',
+                meta: 'Settlement: OPIS Miami Cargo · Closing: Mar 30, 2026',
+                current: 3.1788, change: '+1.02%',
+                settlementDate: 'Apr 03, 2026',
+                histPath: 'M0,172 L80,168 L160,165 L240,158 L320,152 L400,138',
+                forecastPath: 'M400,138 L480,128 L560,115 L640,102 L720,92 L800,82',
+                forecastBand: 'M400,138 L480,122 L560,108 L640,95 L720,85 L800,75 L800,155 L720,162 L640,172 L560,180 L480,188 L400,138 Z',
+                yTop: 3.48, yBot: 2.88,
+                yLabels: ['$3.48', '$3.18', '$2.88'],
+                strikes: [
+                    { label: '$3.06', prob: '78%', cost: 0.18, vol: '440,000' },
+                    { label: '$3.16', prob: '61%', cost: 0.12, vol: '305,000', recommended: true },
+                    { label: '$3.26', prob: '44%', cost: 0.08, vol: '188,000' },
+                    { label: '$3.36', prob: '27%', cost: 0.04, vol: '85,000' },
+                ],
+                defaultStrike: 1,
+                path: 'M0,247 C120,235 240,228 360,205 S480,175 600,150 S720,125 1000,105'
+            },
+            'Detroit Ultra-Low Sulfur Diesel': {
+                title: 'Detroit Diesel — Week of Mar 31, 2026',
+                contractId: 'DT-DSL-2026-14',
+                meta: 'Settlement: OPIS Detroit Pipeline · Closing: Mar 30, 2026',
+                current: 3.0566, change: '+0.08%',
+                settlementDate: 'Apr 03, 2026',
+                histPath: 'M0,178 L80,176 L160,172 L240,168 L320,162 L400,155',
+                forecastPath: 'M400,155 L480,145 L560,132 L640,120 L720,110 L800,100',
+                forecastBand: 'M400,155 L480,140 L560,125 L640,112 L720,102 L800,92 L800,170 L720,178 L640,186 L560,192 L480,198 L400,155 Z',
+                yTop: 3.38, yBot: 2.78,
+                yLabels: ['$3.38', '$3.08', '$2.78'],
+                strikes: [
+                    { label: '$2.94', prob: '80%', cost: 0.17, vol: '465,000' },
+                    { label: '$3.04', prob: '63%', cost: 0.11, vol: '322,000', recommended: true },
+                    { label: '$3.14', prob: '46%', cost: 0.07, vol: '205,000' },
+                    { label: '$3.24', prob: '29%', cost: 0.04, vol: '94,000' },
+                ],
+                defaultStrike: 1,
+                path: 'M0,250 C108,240 216,234 324,215 S480,185 588,160 S696,135 1000,120'
+            },
+            'Houston Gulf ULSD': {
+                title: 'Houston Gulf Diesel — Week of Mar 31, 2026',
+                contractId: 'HG-DSL-2026-14',
+                meta: 'Settlement: OPIS Houston Ship Channel · Closing: Mar 30, 2026',
+                current: 3.0334, change: '-0.22%',
+                settlementDate: 'Apr 03, 2026',
+                histPath: 'M0,180 L80,178 L160,174 L240,176 L320,168 L400,160',
+                forecastPath: 'M400,160 L480,150 L560,140 L640,128 L720,118 L800,108',
+                forecastBand: 'M400,160 L480,145 L560,130 L640,118 L720,108 L800,100 L800,175 L720,182 L640,190 L560,196 L480,202 L400,160 Z',
+                yTop: 3.36, yBot: 2.76,
+                yLabels: ['$3.36', '$3.06', '$2.76'],
+                strikes: [
+                    { label: '$2.92', prob: '81%', cost: 0.16, vol: '490,000' },
+                    { label: '$3.02', prob: '64%', cost: 0.10, vol: '340,000', recommended: true },
+                    { label: '$3.12', prob: '47%', cost: 0.07, vol: '215,000' },
+                    { label: '$3.22', prob: '30%', cost: 0.04, vol: '98,000' },
+                ],
+                defaultStrike: 1,
+                path: 'M0,251 C102,242 204,236 306,218 S450,190 552,165 S654,140 1000,125'
             }
         };
 
@@ -1189,7 +1541,29 @@
             if (chartPath) chartPath.setAttribute('d', d);
         }
 
+        function applyMarketFilters() {
+            const raw = (marketSearchInput && marketSearchInput.value) ? marketSearchInput.value.trim().toLowerCase() : '';
+            const terms = raw.split(/\s+/).filter(Boolean);
+            let visible = 0;
+            marketCardsList.forEach(card => {
+                const fuel = card.dataset.fuel || '';
+                const matchesFuel = currentFuelFilter === 'All Fuels' || fuel === currentFuelFilter;
+                const region = (card.dataset.region || '').toLowerCase();
+                const asset = (card.dataset.asset || '').toLowerCase();
+                const keywords = (card.dataset.keywords || '').toLowerCase();
+                const haystack = `${region} ${asset} ${keywords}`;
+                const matchesSearch = terms.length === 0 || terms.every(t => haystack.includes(t));
+                const show = matchesFuel && matchesSearch;
+                card.style.display = show ? '' : 'none';
+                if (show) visible += 1;
+            });
+            if (marketsEmptyEl) {
+                marketsEmptyEl.classList.toggle('hidden', visible !== 0);
+            }
+        }
+
         function setFuelFilter(filter) {
+            currentFuelFilter = filter;
             fuelButtons.forEach(btn => {
                 btn.classList.remove('border-primary', 'bg-primary', 'text-on-primary');
                 btn.classList.add('border-outline-variant', 'text-on-surface-variant');
@@ -1199,31 +1573,35 @@
                 btn.classList.remove('border-outline-variant', 'text-on-surface-variant');
                 btn.classList.add('border-primary', 'bg-primary', 'text-on-primary');
             }
-
-            const map = {
-                'All Fuels': [...assetRows],
-                'Diesel': [...assetRows].filter(r => r.dataset.asset === 'Atlanta Ultra-Low Sulfur Diesel'),
-                'Gasoline': [...assetRows].filter(r => r.dataset.asset === 'Gulf Coast RBOB Gasoline'),
-                'Jet Fuel': [...assetRows].filter(r => r.dataset.asset === 'Chicago Jet Fuel')
-            };
-            assetRows.forEach(r => r.style.display = 'none');
-            (map[filter] || map['All Fuels']).forEach(r => r.style.display = 'table-row');
+            applyMarketFilters();
         }
 
         function bindEvents() {
-            assetRows.forEach(row => {
-                row.addEventListener('click', () => setDetail(row.dataset.asset));
+            marketCardsList.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.trade-action')) return;
+                    setDetail(card.dataset.asset);
+                });
+                card.addEventListener('keydown', (e) => {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
+                    setDetail(card.dataset.asset);
+                });
             });
             tradeButtons.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const row = e.target.closest('tr.market-row');
-                    if (row) setDetail(row.dataset.asset);
+                    const card = e.target.closest('.market-card');
+                    if (card) setDetail(card.dataset.asset);
                 });
             });
             fuelButtons.forEach(btn => {
                 btn.addEventListener('click', () => setFuelFilter(btn.dataset.filter));
             });
+            if (marketSearchInput) {
+                marketSearchInput.addEventListener('input', applyMarketFilters);
+                marketSearchInput.addEventListener('search', applyMarketFilters);
+            }
             rangeButtons.forEach(btn => {
                 btn.addEventListener('click', () => setRange(btn.dataset.range));
             });
