@@ -35,9 +35,10 @@
                         "error": "#8B1538",
                         "on-error": "#ffffff",
                         "error-container": "#F5E8EB",
-                        "accent": "#9D4E63",
+                        "accent": "#D97706",
+                        "accent-dark": "#B45309",
                         "on-accent": "#ffffff",
-                        "accent-subtle": "#F5EAED",
+                        "accent-subtle": "#FFFBEB",
                     },
                     fontFamily: {
                         sans: ["Manrope", "system-ui", "sans-serif"],
@@ -124,20 +125,20 @@
         }
         .market-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 14px 36px rgba(18, 18, 18, 0.08);
-            border-color: rgba(157, 78, 99, 0.38);
+            box-shadow: 0 14px 36px rgba(217, 119, 6, 0.12);
+            border-color: rgba(217, 119, 6, 0.55);
         }
         .market-card:active {
             transform: translateY(-1px) scale(0.995);
             transition-duration: 120ms;
         }
         .market-card:focus-visible {
-            outline: 2px solid #9D4E63;
+            outline: 2px solid #B45309;
             outline-offset: 2px;
         }
         .market-search-wrap:focus-within {
-            border-color: rgba(157, 78, 99, 0.55);
-            box-shadow: 0 0 0 3px rgba(157, 78, 99, 0.12);
+            border-color: rgba(217, 119, 6, 0.75);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.22);
         }
         /* Light interactive affordance — not toy-like */
         a, button, .market-card, .fuel-filter, .duration-btn, nav a, #back-to-markets {
@@ -221,7 +222,7 @@
 
         html.dark .market-card:hover {
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-            border-color: rgba(232, 160, 179, 0.45);
+            border-color: rgba(251, 191, 36, 0.65);
         }
 
         /* Text */
@@ -247,12 +248,12 @@
 
         /* Detail view dark mode */
         html.dark #detail-svg line[stroke="#eeeeee"] { stroke: #334155 !important; }
-        html.dark #detail-strike-label { background-color: #9D4E63 !important; color: #ffffff !important; }
+        html.dark #detail-strike-label { background-color: #F59E0B !important; color: #1c1917 !important; }
         html.dark select { color-scheme: dark; }
         html.dark select option { background-color: #1e293b; color: #e2e8f0; }
     </style>
 </head>
-<body class="bg-surface selection:bg-accent/15 selection:text-on-surface">
+<body class="bg-surface selection:bg-accent/25 selection:text-on-surface">
 <!-- TopNavBar -->
 <nav class="fixed top-0 w-full z-50 bg-surface-container-lowest dark:bg-neutral-900 border-b border-outline-variant/60 dark:border-neutral-800">
 <div class="flex items-center justify-between px-4 md:px-8 h-16 max-w-full mx-auto">
@@ -261,13 +262,13 @@
 <span class="text-lg font-semibold text-on-surface dark:text-white tracking-tighter">Hedjee</span>
 <div id="mobile-nav" class="md:hidden hidden absolute top-16 left-0 right-0 bg-white border-b border-[#e5e5e5] shadow-md z-40">
 <div class="flex flex-col p-4 gap-2 text-sm">
-<a class="py-2 rounded hover:bg-surface-container hover:text-accent" href="#">Markets</a>
-<a class="py-2 rounded hover:bg-surface-container hover:text-accent" href="#">Portfolio</a>
+<a class="py-2 rounded hover:bg-surface-container hover:text-accent-dark" href="#">Markets</a>
+<a class="py-2 rounded hover:bg-surface-container hover:text-accent-dark" href="#">Portfolio</a>
 </div>
 </div>
 <div class="hidden md:flex items-center gap-8 font-normal text-sm tracking-tight h-full">
-<a class="text-on-surface dark:text-white border-b-2 border-accent pb-4 -mb-[17px] font-medium info-feature" data-demo-message="Markets page gives you quick access to available hedges & key pricing points, so you can pick coverage that best protects your weekly fuel spend." href="#">Markets</a>
-<a class="text-on-surface-variant dark:text-neutral-400 hover:text-accent dark:hover:text-accent border-b-2 border-transparent pb-4 -mb-[17px] transition-colors info-feature" data-demo-message="Portfolio combines performance metrics with your active and settled hedge contracts." href="#">Portfolio</a>
+<a class="text-on-surface dark:text-white border-b-2 border-accent-dark pb-4 -mb-[17px] font-medium info-feature" data-demo-message="Markets page gives you quick access to available hedges & key pricing points, so you can pick coverage that best protects your weekly fuel spend." href="#">Markets</a>
+<a class="text-on-surface-variant dark:text-neutral-400 hover:text-accent-dark dark:hover:text-amber-400 border-b-2 border-transparent pb-4 -mb-[17px] transition-colors info-feature" data-demo-message="Portfolio combines performance metrics with your active and settled hedge contracts." href="#">Portfolio</a>
 </div>
 </div>
 <div class="flex items-center gap-3">
@@ -334,9 +335,9 @@
 </div>
 <div class="flex flex-wrap items-center gap-2">
 <button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-primary bg-primary text-on-primary info-feature" data-filter="All Fuels" data-demo-message="Show all available hedges so you can compare options and quickly choose the best fit for your fleet's usage." >All Fuels</button>
-<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-accent/5 hover:border-accent/25 transition-colors text-on-surface-variant info-feature" data-filter="Diesel" data-demo-message="Diesel filter focuses the list on your most important freight fuel contract">Diesel</button>
-<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-accent/5 hover:border-accent/25 transition-colors text-on-surface-variant info-feature" data-filter="Gasoline" data-demo-message="Gasoline filter shows contracts if your fleet uses mixed fuels, ensuring you don't over-hedge or miss opportunities." >Gasoline</button>
-<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-accent/5 hover:border-accent/25 transition-colors text-on-surface-variant info-feature" data-filter="Jet Fuel" data-demo-message="Jet Fuel filter is for last-mile or heavy equipment users needing aviation-grade fuel risk cover." >Jet Fuel</button>
+<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-accent/10 hover:border-accent/55 transition-colors text-on-surface-variant info-feature" data-filter="Diesel" data-demo-message="Diesel filter focuses the list on your most important freight fuel contract">Diesel</button>
+<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-accent/10 hover:border-accent/55 transition-colors text-on-surface-variant info-feature" data-filter="Gasoline" data-demo-message="Gasoline filter shows contracts if your fleet uses mixed fuels, ensuring you don't over-hedge or miss opportunities." >Gasoline</button>
+<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-accent/10 hover:border-accent/55 transition-colors text-on-surface-variant info-feature" data-filter="Jet Fuel" data-demo-message="Jet Fuel filter is for last-mile or heavy equipment users needing aviation-grade fuel risk cover." >Jet Fuel</button>
 </div>
 </div>
 <div role="search" class="market-search-wrap flex items-center gap-2 rounded-lg border border-outline-variant/35 bg-surface-container-lowest px-3 py-2.5 transition-shadow cursor-text">
@@ -356,7 +357,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.10</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.15</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$3.15</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.20</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.25</span>
 </div>
@@ -373,7 +374,7 @@
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.50</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.55</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$2.60</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$2.60</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.65</span>
 </div>
 <button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
@@ -388,7 +389,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.90</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$2.95</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$2.95</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.00</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.05</span>
 </div>
@@ -404,7 +405,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.02</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.08</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$3.08</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.20</span>
 </div>
@@ -420,7 +421,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.18</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.24</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$3.24</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.30</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.38</span>
 </div>
@@ -436,7 +437,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.95</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.02</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$3.02</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.08</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
 </div>
@@ -452,7 +453,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.12</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.18</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$3.18</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.24</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.32</span>
 </div>
@@ -468,7 +469,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.20</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$3.20</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.28</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.34</span>
 </div>
@@ -484,7 +485,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.04</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.10</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$3.10</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.16</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.22</span>
 </div>
@@ -500,7 +501,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.10</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.16</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$3.16</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.22</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.28</span>
 </div>
@@ -516,7 +517,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.98</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.04</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$3.04</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.10</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.18</span>
 </div>
@@ -532,7 +533,7 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.96</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.02</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/18 border border-accent/55 flex items-center justify-center mono text-[10px] font-semibold text-accent-dark dark:text-amber-400">$3.02</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.08</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
 </div>
@@ -546,7 +547,7 @@
 <section class="hidden section-transition" id="view-contract-detail">
 <!-- Back Link -->
 <div class="mb-8">
-    <a id="back-to-markets" href="#" class="text-sm font-medium text-on-surface-variant hover:text-accent transition-colors flex items-center gap-2 info-feature" data-demo-message="Return to the markets list to compare other hedging products.">
+    <a id="back-to-markets" href="#" class="text-sm font-medium text-on-surface-variant hover:text-accent-dark dark:hover:text-amber-400 transition-colors flex items-center gap-2 info-feature" data-demo-message="Return to the markets list to compare other hedging products.">
         <span class="material-symbols-outlined text-base">arrow_back</span>
         Back to Markets
     </a>
@@ -577,7 +578,7 @@
             <h3 class="text-sm font-bold uppercase tracking-wider text-on-surface">Price Projection &amp; Strike</h3>
             <div class="flex items-center gap-5 text-[11px] font-medium text-on-surface-variant">
                 <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span> Historical</span>
-                <span class="flex items-center gap-1.5"><span class="inline-block w-5 border-t-2 border-dashed border-accent/70"></span> Forecast</span>
+                <span class="flex items-center gap-1.5"><span class="inline-block w-5 border-t-2 border-dashed border-accent-dark"></span> Forecast</span>
             </div>
         </div>
         <div class="h-56 w-full relative" id="detail-chart-wrap">
@@ -586,12 +587,12 @@
                 <line id="dg2" stroke="#eeeeee" stroke-width="1" x1="0" x2="800" y1="100" y2="100"/>
                 <line id="dg3" stroke="#eeeeee" stroke-width="1" x1="0" x2="800" y1="150" y2="150"/>
                 <path id="detail-hist" class="detail-chart-path" d="M0,180 L50,175 L100,165 L150,170 L200,155 L250,160 L300,140 L350,145 L400,130" fill="none" stroke="#121212" stroke-width="2.5"/>
-                <path id="detail-band" d="M400,130 L450,110 L500,105 L550,85 L600,75 L650,60 L700,55 L750,45 L800,40 L800,120 L750,125 L700,135 L650,140 L600,155 L550,165 L500,185 L450,195 L400,130 Z" fill="#9D4E63" fill-opacity="0.08"/>
-                <path id="detail-forecast" d="M400,130 L450,115 L500,108 L550,95 L600,85 L650,70 L700,65 L750,55 L800,50" fill="none" stroke="#9D4E63" stroke-dasharray="4 4" stroke-width="2" stroke-opacity="0.9"/>
+                <path id="detail-band" d="M400,130 L450,110 L500,105 L550,85 L600,75 L650,60 L700,55 L750,45 L800,40 L800,120 L750,125 L700,135 L650,140 L600,155 L550,165 L500,185 L450,195 L400,130 Z" fill="#D97706" fill-opacity="0.14"/>
+                <path id="detail-forecast" d="M400,130 L450,115 L500,108 L550,95 L600,85 L650,70 L700,65 L750,55 L800,50" fill="none" stroke="#B45309" stroke-dasharray="4 4" stroke-width="2.25" stroke-opacity="1"/>
                 <line id="detail-strike-line" stroke="#121212" stroke-dasharray="6 2" stroke-width="1.5" x1="0" x2="800" y1="112" y2="112"/>
-                <circle cx="400" cy="130" fill="#9D4E63" r="4"/>
+                <circle cx="400" cy="130" fill="#B45309" r="4.5"/>
             </svg>
-            <div id="detail-strike-label" class="absolute right-0 bg-accent text-on-accent px-2 py-0.5 text-[10px] mono pointer-events-none" style="top:112px;transform:translateY(-50%)">STRIKE: $3.15</div>
+            <div id="detail-strike-label" class="absolute right-0 bg-accent-dark text-on-accent px-2 py-0.5 text-[10px] mono pointer-events-none" style="top:112px;transform:translateY(-50%)">STRIKE: $3.15</div>
             <div class="absolute right-0 top-0 h-full flex flex-col justify-between py-1 pr-16 text-[10px] mono text-on-surface-variant pointer-events-none" id="detail-y-axis">
                 <span id="d-y1">$3.60</span><span id="d-y2">$3.30</span><span id="d-y3">$3.00</span>
             </div>
@@ -621,7 +622,7 @@
             <!-- Strike select -->
             <div class="info-feature" data-demo-message="Choose your ceiling price. Lower strike = stronger protection, higher premium.">
                 <label class="block text-[10px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">Strike Price ($/gal)</label>
-                <div class="relative border-b border-outline-variant hover:border-accent transition-colors">
+                <div class="relative border-b border-outline-variant hover:border-accent-dark transition-colors">
                     <select id="detail-strike-select" class="w-full bg-transparent border-none py-3 px-0 mono text-lg focus:ring-0 appearance-none cursor-pointer text-on-surface"></select>
                     <span class="material-symbols-outlined absolute right-0 top-3 pointer-events-none text-on-surface-variant text-base">expand_more</span>
                 </div>
@@ -629,7 +630,7 @@
             <!-- Volume -->
             <div class="info-feature" data-demo-message="Enter weekly gallons — premium and max payout scale proportionally with your fleet's consumption.">
                 <label class="block text-[10px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">Weekly Volume (gal)</label>
-                <div class="border-b border-outline-variant hover:border-accent transition-colors">
+                <div class="border-b border-outline-variant hover:border-accent-dark transition-colors">
                     <input id="detail-volume-input" class="w-full bg-transparent border-none py-3 px-0 mono text-lg focus:ring-0 text-on-surface" type="number" min="100" step="100" value="2000"/>
                 </div>
             </div>
@@ -638,8 +639,8 @@
                 <label class="block text-[10px] font-bold uppercase tracking-wider text-on-surface-variant mb-3">Duration</label>
                 <div class="flex gap-2" id="duration-toggle-group">
                     <button class="duration-btn flex-1 py-3 text-xs font-bold border border-primary bg-primary text-white transition-all" data-weeks="1">1W</button>
-                    <button class="duration-btn flex-1 py-3 text-xs font-bold border border-outline-variant text-on-surface-variant hover:border-accent hover:text-accent transition-all" data-weeks="4">4W</button>
-                    <button class="duration-btn flex-1 py-3 text-xs font-bold border border-outline-variant text-on-surface-variant hover:border-accent hover:text-accent transition-all" data-weeks="12">12W</button>
+                    <button class="duration-btn flex-1 py-3 text-xs font-bold border border-outline-variant text-on-surface-variant hover:border-accent-dark hover:text-accent-dark dark:hover:border-amber-500 dark:hover:text-amber-400 transition-all" data-weeks="4">4W</button>
+                    <button class="duration-btn flex-1 py-3 text-xs font-bold border border-outline-variant text-on-surface-variant hover:border-accent-dark hover:text-accent-dark dark:hover:border-amber-500 dark:hover:text-amber-400 transition-all" data-weeks="12">12W</button>
                 </div>
             </div>
             <!-- Summary -->
@@ -670,17 +671,17 @@
     <h3 class="text-sm font-bold uppercase tracking-wider text-on-surface mb-10">Contract Mechanics</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
         <div class="space-y-4">
-            <div class="text-3xl font-bold text-accent/35">01</div>
+            <div class="text-3xl font-bold text-accent-dark/55">01</div>
             <h4 class="text-sm font-semibold text-on-surface">Lock Your Ceiling</h4>
             <p class="text-sm text-on-surface-variant leading-relaxed">Select a strike price that represents the maximum fuel cost your business can sustain for the coverage period.</p>
         </div>
         <div class="space-y-4">
-            <div class="text-3xl font-bold text-accent/35">02</div>
+            <div class="text-3xl font-bold text-accent-dark/55">02</div>
             <h4 class="text-sm font-semibold text-on-surface">Automatic Settlement</h4>
             <p class="text-sm text-on-surface-variant leading-relaxed">If the weekly OPIS average exceeds your strike, Hedjee pays you the difference directly into your account.</p>
         </div>
         <div class="space-y-4">
-            <div class="text-3xl font-bold text-accent/35">03</div>
+            <div class="text-3xl font-bold text-accent-dark/55">03</div>
             <h4 class="text-sm font-semibold text-on-surface">Retain Market Drops</h4>
             <p class="text-sm text-on-surface-variant leading-relaxed">If prices stay below your strike, you pay the lower market rate. Your only cost is the upfront premium.</p>
         </div>
@@ -806,10 +807,10 @@
 <p class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted">© 2025 Hedjee. Precision Fuel Hedging.</p>
 </div>
 <div class="flex items-center gap-8">
-<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent dark:hover:text-accent transition-colors" href="#">Terms</a>
-<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent dark:hover:text-accent transition-colors" href="#">Privacy</a>
-<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent dark:hover:text-accent transition-colors" href="#">Support</a>
-<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent dark:hover:text-accent transition-colors" href="#">API Documentation</a>
+<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent-dark dark:hover:text-amber-400 transition-colors" href="#">Terms</a>
+<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent-dark dark:hover:text-amber-400 transition-colors" href="#">Privacy</a>
+<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent-dark dark:hover:text-amber-400 transition-colors" href="#">Support</a>
+<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent-dark dark:hover:text-amber-400 transition-colors" href="#">API Documentation</a>
 </div>
 </div>
 </footer>
@@ -1128,10 +1129,10 @@
                 const tr = document.createElement('tr');
                 const isSelected = i === selectedIdx;
                 tr.className = isSelected
-                    ? 'cursor-pointer border-l-[3px] border-accent bg-accent/5 transition-colors'
+                    ? 'cursor-pointer border-l-[3px] border-accent-dark bg-accent/12 transition-colors'
                     : 'cursor-pointer hover:bg-surface-container-low transition-colors';
                 tr.innerHTML = `
-                    <td class="py-4 ${isSelected ? 'pl-3' : ''} mono font-${isSelected ? 'bold text-accent' : 'medium text-on-surface'}">${s.label}${s.recommended ? ' <span class="text-[9px] font-bold text-accent/70 ml-1">REC</span>' : ''}</td>
+                    <td class="py-4 ${isSelected ? 'pl-3' : ''} mono font-${isSelected ? 'bold text-accent-dark' : 'medium text-on-surface'}">${s.label}${s.recommended ? ' <span class="text-[9px] font-bold text-accent-dark/90 ml-1">REC</span>' : ''}</td>
                     <td class="py-4 mono text-on-surface-variant">${s.prob}</td>
                     <td class="py-4 mono text-on-surface-variant">$${s.cost.toFixed(2)}/gal</td>
                     <td class="py-4 mono text-on-surface-variant text-right">${s.vol} gal</td>`;
@@ -1287,7 +1288,7 @@
             animateSwitch(active, views[target]);
 
             navLinks.forEach(link => {
-                link.classList.remove('text-on-surface', 'dark:text-white', 'font-medium', 'border-accent');
+                link.classList.remove('text-on-surface', 'dark:text-white', 'font-medium', 'border-accent-dark');
                 link.classList.add('text-on-surface-variant', 'dark:text-neutral-400', 'border-transparent');
             });
             navLinks.forEach(link => {
@@ -1296,7 +1297,7 @@
                 const portfolioActive = target === 'contracts' && navKey === 'portfolio';
                 if (marketsActive || portfolioActive) {
                     link.classList.remove('text-on-surface-variant', 'dark:text-neutral-400', 'border-transparent');
-                    link.classList.add('text-on-surface', 'dark:text-white', 'font-medium', 'border-accent');
+                    link.classList.add('text-on-surface', 'dark:text-white', 'font-medium', 'border-accent-dark');
                 }
             });
         }
@@ -1331,7 +1332,7 @@
             // Duration reset
             document.querySelectorAll('.duration-btn').forEach(b => {
                 const active = b.dataset.weeks === '1';
-                b.className = `duration-btn flex-1 py-3 text-xs font-bold border transition-all ${active ? 'border-primary bg-primary text-white' : 'border-outline-variant text-on-surface-variant hover:border-accent hover:text-accent'}`;
+                b.className = `duration-btn flex-1 py-3 text-xs font-bold border transition-all ${active ? 'border-primary bg-primary text-white' : 'border-outline-variant text-on-surface-variant hover:border-accent-dark hover:text-accent-dark dark:hover:border-amber-500 dark:hover:text-amber-400'}`;
             });
 
             // Strike ladder + panel
@@ -1433,7 +1434,7 @@
                 detailWeeks = parseInt(btn.dataset.weeks);
                 document.querySelectorAll('.duration-btn').forEach(b => {
                     const active = b === btn;
-                    b.className = `duration-btn flex-1 py-3 text-xs font-bold border transition-all ${active ? 'border-primary bg-primary text-white' : 'border-outline-variant text-on-surface-variant hover:border-accent hover:text-accent'}`;
+                    b.className = `duration-btn flex-1 py-3 text-xs font-bold border transition-all ${active ? 'border-primary bg-primary text-white' : 'border-outline-variant text-on-surface-variant hover:border-accent-dark hover:text-accent-dark dark:hover:border-amber-500 dark:hover:text-amber-400'}`;
                 });
                 updateOrderPanel();
             });
