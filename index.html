@@ -5,7 +5,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Hedjee | Precision Fuel Hedging</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
         tailwind.config = {
@@ -13,61 +13,40 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#0066ff",
-                        "surface-tint": "#0054d6",
-                        "secondary-container": "#7cf994",
-                        "surface-container-high": "#e8e8e8",
-                        "on-secondary-fixed-variant": "#005320",
-                        "on-surface-variant": "#424656",
-                        "surface-container-highest": "#e2e2e2",
-                        "outline-variant": "#c2c6d8",
+                        "primary": "#121212",
                         "on-primary": "#ffffff",
-                        "on-tertiary-container": "#fff6f5",
-                        "background": "#f9f9f9",
-                        "surface-container-low": "#f3f3f3",
-                        "on-surface": "#1a1c1c",
-                        "outline": "#727687",
-                        "tertiary-fixed": "#ffdad6",
-                        "on-secondary": "#ffffff",
-                        "on-tertiary-fixed": "#410002",
-                        "on-error-container": "#93000a",
-                        "on-primary-fixed": "#001849",
-                        "inverse-on-surface": "#f0f1f1",
-                        "surface": "#f9f9f9",
-                        "secondary-fixed": "#7ffc97",
-                        "secondary": "#16a34a",
-                        "tertiary-fixed-dim": "#ffb4ab",
+                        "background": "#F9F8F6",
+                        "surface": "#F9F8F6",
+                        "on-background": "#121212",
+                        "on-surface": "#121212",
+                        "on-surface-variant": "#666666",
+                        "on-surface-muted": "#A0A0A0",
+                        "surface-container": "#EFEEEC",
+                        "surface-container-low": "#F3F2F0",
+                        "surface-container-high": "#EAE9E6",
+                        "surface-container-highest": "#E5E4E2",
                         "surface-container-lowest": "#ffffff",
-                        "secondary-fixed-dim": "#62df7d",
-                        "error-container": "#ffdad6",
-                        "on-primary-container": "#f8f7ff",
+                        "outline-variant": "#E0DED9",
+                        "outline": "#C9C7C3",
+                        "primary-container": "#E8E6E3",
+                        "on-primary-container": "#121212",
+                        "secondary": "#121212",
+                        "on-secondary": "#ffffff",
+                        "error": "#8B1538",
                         "on-error": "#ffffff",
-                        "surface-dim": "#dadada",
-                        "surface-bright": "#f9f9f9",
-                        "on-secondary-container": "#007230",
-                        "primary-container": "#0066ff",
-                        "error": "#dc2626",
-                        "primary-fixed": "#dae1ff",
-                        "on-background": "#1a1c1c",
-                        "surface-variant": "#e2e2e2",
-                        "surface-container": "#eeeeee",
-                        "on-primary-fixed-variant": "#003fa4",
-                        "inverse-primary": "#b3c5ff",
-                        "on-tertiary": "#ffffff",
-                        "on-secondary-fixed": "#002109",
-                        "on-tertiary-fixed-variant": "#93000b",
-                        "inverse-surface": "#2f3131",
-                        "primary-fixed-dim": "#b3c5ff",
-                        "tertiary-container": "#dc2626",
-                        "tertiary": "#b70011"
+                        "error-container": "#F5E8EB",
+                        "accent": "#9D4E63",
+                        "on-accent": "#ffffff",
+                        "accent-subtle": "#F5EAED",
                     },
                     fontFamily: {
-                        "headline": ["Inter"],
-                        "body": ["Inter"],
-                        "label": ["Inter"],
-                        "mono": ["JetBrains Mono"]
+                        sans: ["Manrope", "system-ui", "sans-serif"],
+                        headline: ["Manrope", "system-ui", "sans-serif"],
+                        body: ["Manrope", "system-ui", "sans-serif"],
+                        label: ["Manrope", "system-ui", "sans-serif"],
+                        mono: ["JetBrains Mono", "ui-monospace", "monospace"],
                     },
-                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "0.625rem", "xl": "0.75rem", "2xl": "0.875rem", "full": "9999px" },
                 },
             },
         }
@@ -78,7 +57,7 @@
             vertical-align: middle;
             font-size: 1.25rem;
         }
-        body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; color: #1a1c1c; }
+        body { font-family: 'Manrope', system-ui, sans-serif; background-color: #F9F8F6; color: #121212; }
         .mono { font-family: 'JetBrains Mono', monospace; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
@@ -86,13 +65,11 @@
             from { stroke-dashoffset: 1000; }
             to { stroke-dashoffset: 0; }
         }
-        .chart-path {
+        .detail-chart-path {
             stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
             animation: path-entrance 2s ease-out forwards;
         }
-        .chart-area:hover .guide-line { opacity: 1; }
-        .chart-area:hover .price-tooltip { opacity: 1; }
 
         /* Minimal coherent page transitions */
         .section-transition {
@@ -116,7 +93,7 @@
 
         /* Gentle card hover feedback */
         .card-hover-smooth { transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }
-        .card-hover-smooth:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06); border-color: rgba(99, 102, 241, 0.24); }
+        .card-hover-smooth:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(18, 18, 18, 0.06); border-color: rgba(18, 18, 18, 0.2); }
 
         /* Markets grid — Polymarket-adjacent tiles */
         .markets-grid {
@@ -147,35 +124,28 @@
         }
         .market-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.09);
-            border-color: rgba(0, 102, 255, 0.28);
+            box-shadow: 0 14px 36px rgba(18, 18, 18, 0.08);
+            border-color: rgba(157, 78, 99, 0.38);
         }
         .market-card:active {
             transform: translateY(-1px) scale(0.995);
             transition-duration: 120ms;
         }
         .market-card:focus-visible {
-            outline: 2px solid #0066ff;
+            outline: 2px solid #9D4E63;
             outline-offset: 2px;
         }
         .market-search-wrap:focus-within {
-            border-color: rgba(0, 102, 255, 0.45);
-            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.12);
+            border-color: rgba(157, 78, 99, 0.55);
+            box-shadow: 0 0 0 3px rgba(157, 78, 99, 0.12);
         }
         /* Light interactive affordance — not toy-like */
-        a, button, .market-card, .fuel-filter, .range-filter, .duration-btn, nav a, #back-to-markets {
+        a, button, .market-card, .fuel-filter, .duration-btn, nav a, #back-to-markets {
             transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
         }
-        button:active:not(:disabled), .fuel-filter:active, .range-filter:active {
+        button:active:not(:disabled), .fuel-filter:active {
             transform: scale(0.985);
         }
-
-        @keyframes hero-price-pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.85; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .pulse-price { animation: hero-price-pulse 420ms ease; }
 
         /* Demo mode highlight theme */
         .demo-active nav {
@@ -194,18 +164,14 @@
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.24);
         }
         .demo-active .market-card {
-            border-color: rgba(6, 95, 276, 0.22);
-            background: rgba(56, 189, 248, 0.06);
+            border-color: rgba(18, 18, 18, 0.18);
+            background: rgba(18, 18, 18, 0.04);
         }
         .demo-active .card,
         .demo-active .bg-surface-container-highest {
             background: #0f172a !important;
             color: #e2e8f0 !important;
         }
-        .demo-active .chart-area {
-            background: rgba(59, 130, 246, 0.06);
-        }
-
         .demo-info-banner {
             position: fixed;
             right: 1rem;
@@ -222,11 +188,8 @@
         .demo-info-banner.visible { display: block; }
 
         @media (max-width: 768px) {
-            .chart-area { height: 240px !important; }
             .market-card { padding: 1rem !important; }
             .fuel-filter { flex: 1 1 auto; min-width: 120px; }
-            .range-filter { flex: 1 1 40%; min-width: 110px; margin-bottom: 0.375rem; }
-            .range-filter:first-child { margin-top: 0.25rem; }
             #view-markets > div:last-child .flex { flex-wrap: wrap; gap: 0.375rem; justify-content: center; }
             #view-markets > div:last-child .flex > button { min-width: 95px; }
             #mobile-nav { position: absolute; }
@@ -258,13 +221,8 @@
 
         html.dark .market-card:hover {
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-            border-color: rgba(96, 165, 250, 0.35);
+            border-color: rgba(232, 160, 179, 0.45);
         }
-
-        /* The hero chart card (arbitrary bg class) */
-        html.dark #hero-chart > div { background-color: #1e293b !important; border-color: #334155 !important; }
-        html.dark .chart-area { background-color: transparent; }
-        html.dark #svg-chart line[stroke="#e5e5e5"] { stroke: #334155 !important; }
 
         /* Text */
         html.dark .text-on-surface { color: #e2e8f0 !important; }
@@ -283,38 +241,33 @@
         html.dark .border-outline-variant\/20 { border-color: rgba(51, 65, 85, 0.5) !important; }
 
         /* Tooltip & demo overlay */
-        html.dark #chart-tooltip { background-color: #1e293b !important; border-color: #334155 !important; }
-        html.dark #chart-tooltip p { color: #94a3b8 !important; }
-
         /* Dark mode toggle icon transition */
         #darkmode-btn svg { transition: opacity 150ms ease, transform 200ms cubic-bezier(0.16,1,0.3,1); }
         #darkmode-btn:hover svg { transform: rotate(15deg); }
 
         /* Detail view dark mode */
         html.dark #detail-svg line[stroke="#eeeeee"] { stroke: #334155 !important; }
-        html.dark #detail-strike-label { background-color: #003fa4 !important; }
+        html.dark #detail-strike-label { background-color: #9D4E63 !important; color: #ffffff !important; }
         html.dark select { color-scheme: dark; }
         html.dark select option { background-color: #1e293b; color: #e2e8f0; }
     </style>
 </head>
-<body class="bg-surface selection:bg-primary-container selection:text-on-primary-container">
+<body class="bg-surface selection:bg-accent/15 selection:text-on-surface">
 <!-- TopNavBar -->
-<nav class="fixed top-0 w-full z-50 bg-white dark:bg-neutral-900 border-b border-[#e5e5e5] dark:border-neutral-800">
+<nav class="fixed top-0 w-full z-50 bg-surface-container-lowest dark:bg-neutral-900 border-b border-outline-variant/60 dark:border-neutral-800">
 <div class="flex items-center justify-between px-4 md:px-8 h-16 max-w-full mx-auto">
 <div class="flex items-center gap-4 md:gap-12">
 <button id="mobile-menu-btn" class="md:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-outline-variant bg-surface-container-high text-lg" aria-label="Open navigation menu">☰</button>
-<span class="text-lg font-semibold text-[#1a1c1c] dark:text-white tracking-tighter">Hedjee</span>
+<span class="text-lg font-semibold text-on-surface dark:text-white tracking-tighter">Hedjee</span>
 <div id="mobile-nav" class="md:hidden hidden absolute top-16 left-0 right-0 bg-white border-b border-[#e5e5e5] shadow-md z-40">
 <div class="flex flex-col p-4 gap-2 text-sm">
-<a class="py-2 rounded hover:bg-surface-container" href="#">Markets</a>
-<a class="py-2 rounded hover:bg-surface-container" href="#">My Contracts</a>
-<a class="py-2 rounded hover:bg-surface-container" href="#">Portfolio</a>
+<a class="py-2 rounded hover:bg-surface-container hover:text-accent" href="#">Markets</a>
+<a class="py-2 rounded hover:bg-surface-container hover:text-accent" href="#">Portfolio</a>
 </div>
 </div>
-<div class="hidden md:flex items-center gap-8 font-['Inter'] font-normal text-sm tracking-tight h-full">
-<a class="text-[#0066ff] border-b-2 border-[#0066ff] pb-4 -mb-[17px] font-medium info-feature" data-demo-message="Markets page gives you quick access to available hedges & key pricing points, so you can pick coverage that best protects your weekly fuel spend." href="#">Markets</a>
-<a class="text-[#1a1c1c] dark:text-neutral-400 hover:text-[#0066ff] transition-colors info-feature" data-demo-message="My Contracts tracks active hedges and outcomes, giving you instant visibility into risk protection and settlement status." href="#">My Contracts</a>
-<a class="text-[#1a1c1c] dark:text-neutral-400 hover:text-[#0066ff] transition-colors info-feature" data-demo-message="Portfolio view shows pooled outcomes and financing health, helping operators understand their net cost impact over time." href="#">Portfolio</a>
+<div class="hidden md:flex items-center gap-8 font-normal text-sm tracking-tight h-full">
+<a class="text-on-surface dark:text-white border-b-2 border-accent pb-4 -mb-[17px] font-medium info-feature" data-demo-message="Markets page gives you quick access to available hedges & key pricing points, so you can pick coverage that best protects your weekly fuel spend." href="#">Markets</a>
+<a class="text-on-surface-variant dark:text-neutral-400 hover:text-accent dark:hover:text-accent border-b-2 border-transparent pb-4 -mb-[17px] transition-colors info-feature" data-demo-message="Portfolio combines performance metrics with your active and settled hedge contracts." href="#">Portfolio</a>
 </div>
 </div>
 <div class="flex items-center gap-3">
@@ -336,7 +289,7 @@
         <path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6.5 6.5 0 1 0 8 8z"/>
     </svg>
 </button>
-<div class="flex items-center gap-2 text-on-surface-variant font-['Inter'] font-normal text-sm tracking-tight">
+<div class="flex items-center gap-2 text-on-surface-variant font-normal text-sm tracking-tight">
 <span class="material-symbols-outlined text-sm">location_on</span>
 <span>Atlanta, GA</span>
 </div>
@@ -371,80 +324,6 @@
     </ul>
 </div>
 <main class="pt-24 pb-20 px-4 md:px-8 max-w-[1440px] mx-auto min-h-screen">
-<!-- Hero Section: Featured Market Chart -->
-<section class="mb-12 section-transition" id="hero-chart">
-<div class="bg-[#fafafa] border border-[#e5e5e5] p-8 relative overflow-hidden">
-<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-<div>
-<div class="flex items-center gap-2 mb-1">
-<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-<span class="text-[0.6875rem] font-semibold uppercase tracking-wider text-on-surface-variant">Live Benchmark Market</span>
-</div>
-<h2 class="text-2xl font-semibold tracking-tight info-feature" data-demo-message="Live benchmark price track. You can see how physical fuel spot exposures are priced in real time for budget certainty.">Atlanta Diesel Spot Price</h2>
-</div>
-<div class="flex items-center gap-10">
-<div class="text-right">
-<p class="text-[0.6875rem] font-semibold text-neutral-400 uppercase tracking-widest mb-1">Current Price</p>
-<span id="hero-current-price" class="mono text-2xl font-semibold tracking-tight">$3.1420</span>
-</div>
-<div class="text-right">
-<p class="text-[0.6875rem] font-semibold text-neutral-400 uppercase tracking-widest mb-1">24h Change</p>
-<span id="hero-24h-change" class="mono text-2xl font-semibold text-secondary">+$0.038 (+1.24%)</span>
-</div>
-<p class="mt-2 text-[0.68rem] text-neutral-500">Demo only: price streams are simulated and not actual market data.</p>
-</div>
-</div>
-<!-- Interactive SVG Chart -->
-<div class="relative w-full h-[320px] chart-area cursor-crosshair">
-<svg class="w-full h-full" id="svg-chart" preserveaspectratio="none" viewbox="0 0 1000 300">
-<!-- Grid Lines -->
-<line stroke="#e5e5e5" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="50" y2="50"></line>
-<line stroke="#e5e5e5" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="150" y2="150"></line>
-<line stroke="#e5e5e5" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="1000" y1="250" y2="250"></line>
-<!-- Price Path -->
-<path class="chart-path" d="M0,250 C100,240 200,260 300,180 S500,120 600,150 S800,80 1000,100" fill="none" stroke="#0066ff" stroke-width="2.5"></path>
-<!-- Area Gradient -->
-<path d="M0,250 C100,240 200,260 300,180 S500,120 600,150 S800,80 1000,100 L1000,300 L0,300 Z" fill="url(#chart-gradient)" opacity="0.1"></path>
-<defs>
-<lineargradient id="chart-gradient" x1="0%" x2="0%" y1="0%" y2="100%">
-<stop offset="0%" stop-color="#0066ff"></stop>
-<stop offset="100%" stop-color="#0066ff" stop-opacity="0"></stop>
-</lineargradient>
-</defs>
-<!-- Interactive Elements -->
-<line class="guide-line opacity-0 transition-opacity duration-200" id="v-line" stroke="#727687" stroke-dasharray="5 5" stroke-width="1" x1="0" x2="0" y1="0" y2="300"></line>
-</svg>
-<!-- Tooltip -->
-<div class="price-tooltip opacity-0 pointer-events-none absolute bg-white border border-[#e5e5e5] px-3 py-2 shadow-sm transition-opacity duration-200 z-10" id="chart-tooltip">
-<p class="text-[10px] uppercase font-bold text-neutral-400 mb-0.5" id="tooltip-date">OCT 14, 08:30 AM</p>
-<p class="mono text-sm font-semibold text-primary" id="tooltip-price">$3.1420</p>
-</div>
-<!-- Y-Axis Labels -->
-<div class="absolute right-0 top-0 h-full flex flex-col justify-between py-2 text-[10px] mono text-neutral-400 pointer-events-none pr-2">
-<span>$3.50</span>
-<span>$3.25</span>
-<span>$3.00</span>
-<span>$2.75</span>
-</div>
-</div>
-<div class="mt-4 flex justify-between px-2">
-<div class="flex gap-8 text-[10px] mono text-neutral-400 uppercase">
-<span>OCT</span>
-<span>NOV</span>
-<span>DEC</span>
-<span>JAN</span>
-<span>FEB</span>
-<span>MAR</span>
-</div>
-<div class="flex gap-2">
-<button class="range-filter px-3 py-1 text-[10px] font-bold border border-primary bg-primary/10 text-primary info-feature" data-range="1D" data-demo-message="1-day view gives precise short-term trend context for weekly purchasing decisions">1D</button>
-<button class="range-filter px-3 py-1 text-[10px] font-bold border border-outline-variant hover:bg-surface-container transition-colors info-feature" data-range="1W" data-demo-message="1-week horizon simulates the actual contract cycle for weekly fuel buys">1W</button>
-<button class="range-filter px-3 py-1 text-[10px] font-bold border border-outline-variant hover:bg-surface-container transition-colors info-feature" data-range="1M" data-demo-message="1-month view shows broader volatility to plan next month’s fleet budget" >1M</button>
-<button class="range-filter px-3 py-1 text-[10px] font-bold border border-outline-variant hover:bg-surface-container transition-colors info-feature" data-range="YTD" data-demo-message="Year-to-date bucket helps compare performance vs prior periods for risk governance." >YTD</button>
-</div>
-</div>
-</div>
-</section>
 <!-- Markets View (Active) -->
 <section class="space-y-6 section-transition" id="view-markets">
 <header class="space-y-5">
@@ -455,9 +334,9 @@
 </div>
 <div class="flex flex-wrap items-center gap-2">
 <button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-primary bg-primary text-on-primary info-feature" data-filter="All Fuels" data-demo-message="Show all available hedges so you can compare options and quickly choose the best fit for your fleet's usage." >All Fuels</button>
-<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-surface-container transition-colors text-on-surface-variant info-feature" data-filter="Diesel" data-demo-message="Diesel filter focuses the list on your most important freight fuel contract">Diesel</button>
-<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-surface-container transition-colors text-on-surface-variant info-feature" data-filter="Gasoline" data-demo-message="Gasoline filter shows contracts if your fleet uses mixed fuels, ensuring you don't over-hedge or miss opportunities." >Gasoline</button>
-<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-surface-container transition-colors text-on-surface-variant info-feature" data-filter="Jet Fuel" data-demo-message="Jet Fuel filter is for last-mile or heavy equipment users needing aviation-grade fuel risk cover." >Jet Fuel</button>
+<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-accent/5 hover:border-accent/25 transition-colors text-on-surface-variant info-feature" data-filter="Diesel" data-demo-message="Diesel filter focuses the list on your most important freight fuel contract">Diesel</button>
+<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-accent/5 hover:border-accent/25 transition-colors text-on-surface-variant info-feature" data-filter="Gasoline" data-demo-message="Gasoline filter shows contracts if your fleet uses mixed fuels, ensuring you don't over-hedge or miss opportunities." >Gasoline</button>
+<button class="fuel-filter px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-wider border border-outline-variant hover:bg-accent/5 hover:border-accent/25 transition-colors text-on-surface-variant info-feature" data-filter="Jet Fuel" data-demo-message="Jet Fuel filter is for last-mile or heavy equipment users needing aviation-grade fuel risk cover." >Jet Fuel</button>
 </div>
 </div>
 <div role="search" class="market-search-wrap flex items-center gap-2 rounded-lg border border-outline-variant/35 bg-surface-container-lowest px-3 py-2.5 transition-shadow cursor-text">
@@ -473,15 +352,15 @@
 <p class="text-[11px] text-on-surface-variant mt-0.5">FOB Pipeline · Spot</p>
 <div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
 <span class="mono text-lg font-medium text-on-surface">$3.1420</span>
-<span class="mono text-xs font-medium text-secondary">+1.24%</span>
+<span class="mono text-xs font-medium text-on-surface">+1.24%</span>
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.10</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.15</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.15</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.20</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.25</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant info-feature" data-demo-message="Trade launches contract flow; this is where you lock in protection and convert exposure to budget certainty">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90 info-feature" data-demo-message="Trade launches contract flow; this is where you lock in protection and convert exposure to budget certainty">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Gulf Coast RBOB Gasoline" data-fuel="Gasoline" data-region="Gulf Coast" data-keywords="gulf coast houston texas gasoline rbob">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Gulf Coast</span>
@@ -494,10 +373,10 @@
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.50</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.55</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$2.60</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$2.60</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.65</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Chicago Jet Fuel" data-fuel="Jet Fuel" data-region="Midwest" data-keywords="chicago illinois midwest jet">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Midwest</span>
@@ -505,15 +384,15 @@
 <p class="text-[11px] text-on-surface-variant mt-0.5">Regular · Spot</p>
 <div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
 <span class="mono text-lg font-medium text-on-surface">$2.9411</span>
-<span class="mono text-xs font-medium text-secondary">+0.12%</span>
+<span class="mono text-xs font-medium text-on-surface">+0.12%</span>
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.90</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$2.95</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$2.95</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.00</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.05</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="New York Harbor ULSD" data-fuel="Diesel" data-region="Northeast" data-keywords="new york harbor ny nj barge northeast ulsd">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Northeast</span>
@@ -521,15 +400,15 @@
 <p class="text-[11px] text-on-surface-variant mt-0.5">Barge · Spot</p>
 <div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
 <span class="mono text-lg font-medium text-on-surface">$3.0891</span>
-<span class="mono text-xs font-medium text-secondary">+0.88%</span>
+<span class="mono text-xs font-medium text-on-surface">+0.88%</span>
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.02</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.08</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.08</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.20</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Los Angeles CARB Diesel" data-fuel="Diesel" data-region="West Coast" data-keywords="los angeles la california carb west coast">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">West Coast</span>
@@ -537,15 +416,15 @@
 <p class="text-[11px] text-on-surface-variant mt-0.5">Pipeline · Spot</p>
 <div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
 <span class="mono text-lg font-medium text-on-surface">$3.2645</span>
-<span class="mono text-xs font-medium text-secondary">+0.31%</span>
+<span class="mono text-xs font-medium text-on-surface">+0.31%</span>
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.18</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.24</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.24</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.30</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.38</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Dallas Group 3 ULSD" data-fuel="Diesel" data-region="Southwest" data-keywords="dallas texas group 3 oklahoma southwest">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Southwest</span>
@@ -557,11 +436,11 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.95</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.02</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.02</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.08</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Denver Ultra-Low Sulfur Diesel" data-fuel="Diesel" data-region="Mountain" data-keywords="denver colorado rocky mountain front range">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Mountain</span>
@@ -569,15 +448,15 @@
 <p class="text-[11px] text-on-surface-variant mt-0.5">Pipeline · Spot</p>
 <div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
 <span class="mono text-lg font-medium text-on-surface">$3.1950</span>
-<span class="mono text-xs font-medium text-secondary">+0.67%</span>
+<span class="mono text-xs font-medium text-on-surface">+0.67%</span>
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.12</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.18</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.18</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.24</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.32</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Seattle Harbor ULSD" data-fuel="Diesel" data-region="Pacific Northwest" data-keywords="seattle washington portland pnw pacific northwest nw cascadia">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Pacific NW</span>
@@ -585,15 +464,15 @@
 <p class="text-[11px] text-on-surface-variant mt-0.5">Waterborne · Spot</p>
 <div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
 <span class="mono text-lg font-medium text-on-surface">$3.2240</span>
-<span class="mono text-xs font-medium text-secondary">+0.41%</span>
+<span class="mono text-xs font-medium text-on-surface">+0.41%</span>
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.20</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.20</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.28</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.34</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Boston Harbor ULSD" data-fuel="Diesel" data-region="Northeast" data-keywords="boston massachusetts new england harbor">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Northeast</span>
@@ -601,15 +480,15 @@
 <p class="text-[11px] text-on-surface-variant mt-0.5">Barge · Spot</p>
 <div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
 <span class="mono text-lg font-medium text-on-surface">$3.1122</span>
-<span class="mono text-xs font-medium text-secondary">+0.55%</span>
+<span class="mono text-xs font-medium text-on-surface">+0.55%</span>
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.04</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.10</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.10</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.16</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.22</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Miami OPIS ULSD" data-fuel="Diesel" data-region="Southeast" data-keywords="miami florida south atlantic cargo">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Southeast</span>
@@ -617,15 +496,15 @@
 <p class="text-[11px] text-on-surface-variant mt-0.5">Cargo · Spot</p>
 <div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
 <span class="mono text-lg font-medium text-on-surface">$3.1788</span>
-<span class="mono text-xs font-medium text-secondary">+1.02%</span>
+<span class="mono text-xs font-medium text-on-surface">+1.02%</span>
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.10</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.16</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.16</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.22</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.28</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Detroit Ultra-Low Sulfur Diesel" data-fuel="Diesel" data-region="Midwest" data-keywords="detroit michigan great lakes midwest">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Midwest</span>
@@ -633,15 +512,15 @@
 <p class="text-[11px] text-on-surface-variant mt-0.5">Pipeline · Spot</p>
 <div class="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
 <span class="mono text-lg font-medium text-on-surface">$3.0566</span>
-<span class="mono text-xs font-medium text-secondary">+0.08%</span>
+<span class="mono text-xs font-medium text-on-surface">+0.08%</span>
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.98</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.04</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.04</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.10</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.18</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 <article tabindex="0" class="market-card flex flex-col h-full border border-outline-variant/25 bg-surface-container-lowest p-4 text-left shadow-sm outline-none" data-asset="Houston Gulf ULSD" data-fuel="Diesel" data-region="Gulf Coast" data-keywords="houston texas ship channel gulf waterborne">
 <span class="text-[10px] font-semibold uppercase tracking-wide text-on-surface-variant w-fit rounded px-1.5 py-0.5 bg-surface-container-high border border-outline-variant/20">Gulf Coast</span>
@@ -653,11 +532,11 @@
 </div>
 <div class="mt-3 flex flex-wrap gap-0.5">
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$2.96</span>
-<span class="h-6 min-w-[2.25rem] px-1 bg-primary-container/10 border border-primary/30 flex items-center justify-center mono text-[10px] text-primary">$3.02</span>
+<span class="h-6 min-w-[2.25rem] px-1 bg-accent/10 border border-accent/35 flex items-center justify-center mono text-[10px] text-accent">$3.02</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.08</span>
 <span class="h-6 min-w-[2.25rem] px-1 bg-surface-container-high border border-outline-variant/30 flex items-center justify-center mono text-[10px]">$3.14</span>
 </div>
-<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:bg-on-primary-fixed-variant">Trade</button>
+<button type="button" class="trade-action mt-4 w-full py-2 rounded border border-primary/20 bg-primary text-on-primary text-[0.6875rem] font-semibold uppercase tracking-wider hover:opacity-90">Trade</button>
 </article>
 </div>
 <p id="markets-empty" class="hidden text-center text-sm text-on-surface-variant py-14 border border-dashed border-outline-variant/30 rounded-lg bg-surface-container-lowest/50">No markets match your search. Try another region, city, or fuel type.</p>
@@ -667,7 +546,7 @@
 <section class="hidden section-transition" id="view-contract-detail">
 <!-- Back Link -->
 <div class="mb-8">
-    <a id="back-to-markets" href="#" class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 info-feature" data-demo-message="Return to the markets list to compare other hedging products.">
+    <a id="back-to-markets" href="#" class="text-sm font-medium text-on-surface-variant hover:text-accent transition-colors flex items-center gap-2 info-feature" data-demo-message="Return to the markets list to compare other hedging products.">
         <span class="material-symbols-outlined text-base">arrow_back</span>
         Back to Markets
     </a>
@@ -676,7 +555,7 @@
 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-outline-variant/20 pb-8 gap-6">
     <div>
         <div class="flex items-center gap-3 mb-2">
-            <span class="bg-secondary/10 text-secondary text-[10px] font-bold uppercase tracking-widest px-2 py-0.5">Open</span>
+            <span class="bg-surface-container-high text-on-surface text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 border border-outline-variant/30 rounded">Open</span>
             <span id="detail-contract-id" class="text-sm text-on-surface-variant mono">ID: AH-DSL-2026-14</span>
         </div>
         <h1 id="detail-title" class="text-3xl font-semibold tracking-tight text-on-surface">Atlanta Diesel — Week of Mar 31, 2026</h1>
@@ -685,7 +564,7 @@
     <div class="flex flex-col items-end shrink-0">
         <span class="text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant mb-1">Current Market Price</span>
         <span id="detail-current-price" class="text-3xl mono font-medium text-on-surface">$3.1420</span>
-        <span id="detail-change" class="text-xs mono text-secondary mt-1">+1.24%</span>
+        <span id="detail-change" class="text-xs mono text-on-surface mt-1">+1.24%</span>
     </div>
 </div>
 <!-- Main Grid -->
@@ -698,7 +577,7 @@
             <h3 class="text-sm font-bold uppercase tracking-wider text-on-surface">Price Projection &amp; Strike</h3>
             <div class="flex items-center gap-5 text-[11px] font-medium text-on-surface-variant">
                 <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span> Historical</span>
-                <span class="flex items-center gap-1.5"><span class="inline-block w-5 border-t-2 border-dashed border-primary/60"></span> Forecast</span>
+                <span class="flex items-center gap-1.5"><span class="inline-block w-5 border-t-2 border-dashed border-accent/70"></span> Forecast</span>
             </div>
         </div>
         <div class="h-56 w-full relative" id="detail-chart-wrap">
@@ -706,13 +585,13 @@
                 <line id="dg1" stroke="#eeeeee" stroke-width="1" x1="0" x2="800" y1="50" y2="50"/>
                 <line id="dg2" stroke="#eeeeee" stroke-width="1" x1="0" x2="800" y1="100" y2="100"/>
                 <line id="dg3" stroke="#eeeeee" stroke-width="1" x1="0" x2="800" y1="150" y2="150"/>
-                <path id="detail-hist" d="M0,180 L50,175 L100,165 L150,170 L200,155 L250,160 L300,140 L350,145 L400,130" fill="none" stroke="#0050cb" stroke-width="2.5"/>
-                <path id="detail-band" d="M400,130 L450,110 L500,105 L550,85 L600,75 L650,60 L700,55 L750,45 L800,40 L800,120 L750,125 L700,135 L650,140 L600,155 L550,165 L500,185 L450,195 L400,130 Z" fill="#0066ff" fill-opacity="0.05"/>
-                <path id="detail-forecast" d="M400,130 L450,115 L500,108 L550,95 L600,85 L650,70 L700,65 L750,55 L800,50" fill="none" stroke="#0066ff" stroke-dasharray="4 4" stroke-width="2"/>
-                <line id="detail-strike-line" stroke="#0066ff" stroke-dasharray="6 2" stroke-width="1.5" x1="0" x2="800" y1="112" y2="112"/>
-                <circle cx="400" cy="130" fill="#0050cb" r="4"/>
+                <path id="detail-hist" class="detail-chart-path" d="M0,180 L50,175 L100,165 L150,170 L200,155 L250,160 L300,140 L350,145 L400,130" fill="none" stroke="#121212" stroke-width="2.5"/>
+                <path id="detail-band" d="M400,130 L450,110 L500,105 L550,85 L600,75 L650,60 L700,55 L750,45 L800,40 L800,120 L750,125 L700,135 L650,140 L600,155 L550,165 L500,185 L450,195 L400,130 Z" fill="#9D4E63" fill-opacity="0.08"/>
+                <path id="detail-forecast" d="M400,130 L450,115 L500,108 L550,95 L600,85 L650,70 L700,65 L750,55 L800,50" fill="none" stroke="#9D4E63" stroke-dasharray="4 4" stroke-width="2" stroke-opacity="0.9"/>
+                <line id="detail-strike-line" stroke="#121212" stroke-dasharray="6 2" stroke-width="1.5" x1="0" x2="800" y1="112" y2="112"/>
+                <circle cx="400" cy="130" fill="#9D4E63" r="4"/>
             </svg>
-            <div id="detail-strike-label" class="absolute right-0 bg-primary text-white px-2 py-0.5 text-[10px] mono pointer-events-none" style="top:112px;transform:translateY(-50%)">STRIKE: $3.15</div>
+            <div id="detail-strike-label" class="absolute right-0 bg-accent text-on-accent px-2 py-0.5 text-[10px] mono pointer-events-none" style="top:112px;transform:translateY(-50%)">STRIKE: $3.15</div>
             <div class="absolute right-0 top-0 h-full flex flex-col justify-between py-1 pr-16 text-[10px] mono text-on-surface-variant pointer-events-none" id="detail-y-axis">
                 <span id="d-y1">$3.60</span><span id="d-y2">$3.30</span><span id="d-y3">$3.00</span>
             </div>
@@ -742,7 +621,7 @@
             <!-- Strike select -->
             <div class="info-feature" data-demo-message="Choose your ceiling price. Lower strike = stronger protection, higher premium.">
                 <label class="block text-[10px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">Strike Price ($/gal)</label>
-                <div class="relative border-b border-outline-variant hover:border-primary transition-colors">
+                <div class="relative border-b border-outline-variant hover:border-accent transition-colors">
                     <select id="detail-strike-select" class="w-full bg-transparent border-none py-3 px-0 mono text-lg focus:ring-0 appearance-none cursor-pointer text-on-surface"></select>
                     <span class="material-symbols-outlined absolute right-0 top-3 pointer-events-none text-on-surface-variant text-base">expand_more</span>
                 </div>
@@ -750,7 +629,7 @@
             <!-- Volume -->
             <div class="info-feature" data-demo-message="Enter weekly gallons — premium and max payout scale proportionally with your fleet's consumption.">
                 <label class="block text-[10px] font-bold uppercase tracking-wider text-on-surface-variant mb-2">Weekly Volume (gal)</label>
-                <div class="border-b border-outline-variant hover:border-primary transition-colors">
+                <div class="border-b border-outline-variant hover:border-accent transition-colors">
                     <input id="detail-volume-input" class="w-full bg-transparent border-none py-3 px-0 mono text-lg focus:ring-0 text-on-surface" type="number" min="100" step="100" value="2000"/>
                 </div>
             </div>
@@ -759,8 +638,8 @@
                 <label class="block text-[10px] font-bold uppercase tracking-wider text-on-surface-variant mb-3">Duration</label>
                 <div class="flex gap-2" id="duration-toggle-group">
                     <button class="duration-btn flex-1 py-3 text-xs font-bold border border-primary bg-primary text-white transition-all" data-weeks="1">1W</button>
-                    <button class="duration-btn flex-1 py-3 text-xs font-bold border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all" data-weeks="4">4W</button>
-                    <button class="duration-btn flex-1 py-3 text-xs font-bold border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all" data-weeks="12">12W</button>
+                    <button class="duration-btn flex-1 py-3 text-xs font-bold border border-outline-variant text-on-surface-variant hover:border-accent hover:text-accent transition-all" data-weeks="4">4W</button>
+                    <button class="duration-btn flex-1 py-3 text-xs font-bold border border-outline-variant text-on-surface-variant hover:border-accent hover:text-accent transition-all" data-weeks="12">12W</button>
                 </div>
             </div>
             <!-- Summary -->
@@ -771,7 +650,7 @@
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-[11px] font-semibold text-on-surface-variant uppercase">Max Payout Protected</span>
-                    <span id="summary-protection" class="mono font-medium text-secondary">$8,160.00</span>
+                    <span id="summary-protection" class="mono font-medium text-on-surface">$8,160.00</span>
                 </div>
                 <div class="pt-4 border-t border-outline-variant/30 flex justify-between items-center">
                     <span class="text-[11px] font-semibold text-on-surface-variant uppercase">Settlement Date</span>
@@ -791,148 +670,146 @@
     <h3 class="text-sm font-bold uppercase tracking-wider text-on-surface mb-10">Contract Mechanics</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
         <div class="space-y-4">
-            <div class="text-3xl font-bold text-primary opacity-30">01</div>
+            <div class="text-3xl font-bold text-accent/35">01</div>
             <h4 class="text-sm font-semibold text-on-surface">Lock Your Ceiling</h4>
             <p class="text-sm text-on-surface-variant leading-relaxed">Select a strike price that represents the maximum fuel cost your business can sustain for the coverage period.</p>
         </div>
         <div class="space-y-4">
-            <div class="text-3xl font-bold text-primary opacity-30">02</div>
+            <div class="text-3xl font-bold text-accent/35">02</div>
             <h4 class="text-sm font-semibold text-on-surface">Automatic Settlement</h4>
             <p class="text-sm text-on-surface-variant leading-relaxed">If the weekly OPIS average exceeds your strike, Hedjee pays you the difference directly into your account.</p>
         </div>
         <div class="space-y-4">
-            <div class="text-3xl font-bold text-primary opacity-30">03</div>
+            <div class="text-3xl font-bold text-accent/35">03</div>
             <h4 class="text-sm font-semibold text-on-surface">Retain Market Drops</h4>
             <p class="text-sm text-on-surface-variant leading-relaxed">If prices stay below your strike, you pay the lower market rate. Your only cost is the upfront premium.</p>
         </div>
     </div>
 </div>
 </section>
-<!-- My Contracts View (Initially Hidden) -->
+<!-- Portfolio: performance, context, then contracts -->
 <section class="hidden space-y-8 section-transition" id="view-contracts">
-<!-- Portfolio Summary Bar -->
-<div class="grid grid-cols-1 md:grid-cols-4 border border-outline-variant/20 bg-surface-container-lowest divide-x divide-outline-variant/10">
+<div class="bg-surface-container-lowest border border-outline-variant/20 p-6 md:p-8 rounded-xl">
+<h1 class="text-2xl font-semibold text-on-surface tracking-tight mb-1">Portfolio</h1>
+<p class="text-sm text-on-surface-variant mb-8 max-w-2xl">Consolidated hedging performance, cash reserve impact, and P&amp;L risk mitigation — with your contract activity below.</p>
+<h2 class="text-xs font-bold uppercase tracking-widest text-on-surface-muted mb-4">Performance</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="p-5 bg-background border border-outline-variant/30 rounded-xl">
+<p class="text-[11px] font-semibold uppercase tracking-wider text-on-surface-muted">Total hedge capacity</p>
+<p class="text-2xl font-bold text-on-surface mt-2">23,400 gal</p>
+</div>
+<div class="p-5 bg-background border border-outline-variant/30 rounded-xl">
+<p class="text-[11px] font-semibold uppercase tracking-wider text-on-surface-muted">Est. annual volatility saved</p>
+<p class="text-2xl font-bold text-on-surface mt-2">$7,800</p>
+</div>
+<div class="p-5 bg-background border border-outline-variant/30 rounded-xl">
+<p class="text-[11px] font-semibold uppercase tracking-wider text-on-surface-muted">Current exposed spend</p>
+<p class="text-2xl font-bold text-on-surface mt-2">$156,200</p>
+</div>
+<div class="p-5 bg-background border border-outline-variant/30 rounded-xl">
+<p class="text-[11px] font-semibold uppercase tracking-wider text-on-surface-muted">Hedges in place</p>
+<p class="text-2xl font-bold text-on-surface mt-2">5 contracts</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant/20 p-6 md:p-8 rounded-xl">
+<h3 class="text-base font-semibold text-on-surface">Why this helps</h3>
+<ul class="list-disc list-inside text-sm text-on-surface-variant mt-3 space-y-1">
+<li>Converts unpredictable diesel price changes into a fixed catch-up payment stream.</li>
+<li>Reduces margin erosion when diesel spikes above strike levels.</li>
+<li>Improves fleet bidding confidence by capping fuel expense risk.</li>
+</ul>
+</div>
+<div>
+<h2 class="text-xs font-bold uppercase tracking-widest text-on-surface-muted mb-4">Contracts</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 border border-outline-variant/20 bg-surface-container-lowest divide-y md:divide-y-0 md:divide-x divide-outline-variant/10 rounded-xl overflow-hidden">
 <div class="p-6">
-<span class="text-[0.6875rem] font-semibold text-neutral-500 uppercase tracking-wider block">Net Portfolio Value</span>
-<span class="mono text-2xl font-semibold text-secondary">+$2,145.20</span>
+<span class="text-[0.6875rem] font-semibold text-on-surface-muted uppercase tracking-wider block">Net portfolio value</span>
+<span class="mono text-2xl font-semibold text-on-surface">+$2,145.20</span>
 </div>
 <div class="p-6">
-<span class="text-[0.6875rem] font-semibold text-neutral-500 uppercase tracking-wider block">Active Hedges</span>
-<span class="mono text-2xl font-semibold">3</span>
+<span class="text-[0.6875rem] font-semibold text-on-surface-muted uppercase tracking-wider block">Active hedges</span>
+<span class="mono text-2xl font-semibold text-on-surface">3</span>
 </div>
 <div class="p-6">
-<span class="text-[0.6875rem] font-semibold text-neutral-500 uppercase tracking-wider block">Total Gallons Protected</span>
-<span class="mono text-2xl font-semibold">15,000</span>
+<span class="text-[0.6875rem] font-semibold text-on-surface-muted uppercase tracking-wider block">Gallons protected</span>
+<span class="mono text-2xl font-semibold text-on-surface">15,000</span>
 </div>
 <div class="p-6">
-<span class="text-[0.6875rem] font-semibold text-neutral-500 uppercase tracking-wider block">Settlement Account</span>
-<span class="mono text-2xl font-semibold">$48,201</span>
+<span class="text-[0.6875rem] font-semibold text-on-surface-muted uppercase tracking-wider block">Settlement account</span>
+<span class="mono text-2xl font-semibold text-on-surface">$48,201</span>
 </div>
 </div>
-<!-- Active Contracts Table -->
-<div class="bg-surface-container-lowest border border-outline-variant/20">
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl overflow-hidden">
 <table class="w-full text-left">
 <thead>
 <tr class="border-b border-outline-variant/20 bg-surface-container-low">
-<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Contract ID</th>
-<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Benchmark</th>
-<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Strike / Spot</th>
-<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500">Status</th>
-<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-neutral-500 text-right">Payout</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-on-surface-muted">Contract ID</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-on-surface-muted">Benchmark</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-on-surface-muted">Strike / Spot</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-on-surface-muted">Status</th>
+<th class="py-4 px-6 text-[0.6875rem] font-semibold uppercase tracking-wider text-on-surface-muted text-right">Payout</th>
 </tr>
 </thead>
 <tbody class="divide-y divide-outline-variant/10">
 <tr class="hover:bg-surface-container-low/50">
 <td class="py-5 px-6 mono text-xs">BH-8821-X</td>
 <td class="py-5 px-6">
-<span class="text-sm font-medium">Atlanta ULSD</span>
+<span class="text-sm font-medium text-on-surface">Atlanta ULSD</span>
 </td>
 <td class="py-5 px-6">
-<span class="mono text-xs">$3.10 / <span class="text-secondary">$3.14</span></span>
+<span class="mono text-xs">$3.10 / <span class="text-on-surface font-medium">$3.14</span></span>
 </td>
 <td class="py-5 px-6">
-<span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-secondary/10 text-secondary uppercase border border-secondary/20">Triggered</span>
+<span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-surface-container-high text-on-surface uppercase border border-outline-variant/30 rounded">Resolved</span>
 </td>
-<td class="py-5 px-6 text-right mono text-sm font-semibold text-secondary">+$600.00</td>
+<td class="py-5 px-6 text-right mono text-sm font-semibold text-on-surface">+$600.00</td>
 </tr>
 <tr class="hover:bg-surface-container-low/50">
 <td class="py-5 px-6 mono text-xs">BH-8845-Y</td>
 <td class="py-5 px-6">
-<span class="text-sm font-medium">Gulf Coast RBOB</span>
+<span class="text-sm font-medium text-on-surface">Gulf Coast RBOB</span>
 </td>
 <td class="py-5 px-6">
 <span class="mono text-xs">$2.70 / <span class="text-on-surface-variant">$2.58</span></span>
 </td>
 <td class="py-5 px-6">
-<span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-surface-container-high text-on-surface-variant uppercase border border-outline-variant/30">Active</span>
+<span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-surface-container-high text-on-surface-variant uppercase border border-outline-variant/30 rounded">Active</span>
 </td>
 <td class="py-5 px-6 text-right mono text-sm font-semibold text-on-surface-variant">$0.00</td>
 </tr>
 <tr class="hover:bg-surface-container-low/50">
 <td class="py-5 px-6 mono text-xs">BH-8910-Z</td>
 <td class="py-5 px-6">
-<span class="text-sm font-medium">Chicago Jet Fuel</span>
+<span class="text-sm font-medium text-on-surface">Chicago Jet Fuel</span>
 </td>
 <td class="py-5 px-6">
-<span class="mono text-xs">$2.90 / <span class="text-secondary">$2.94</span></span>
+<span class="mono text-xs">$2.90 / <span class="text-on-surface font-medium">$2.94</span></span>
 </td>
 <td class="py-5 px-6">
-<span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-secondary/10 text-secondary uppercase border border-secondary/20">Triggered</span>
+<span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold bg-surface-container-high text-on-surface uppercase border border-outline-variant/30 rounded">Resolved</span>
 </td>
-<td class="py-5 px-6 text-right mono text-sm font-semibold text-secondary">+$1,545.20</td>
+<td class="py-5 px-6 text-right mono text-sm font-semibold text-on-surface">+$1,545.20</td>
 </tr>
 </tbody>
 </table>
 </div>
 </section>
 
-<!-- Portfolio Dashboard View (Initially Hidden) -->
-<section class="hidden space-y-8 section-transition" id="view-portfolio">
-    <div class="bg-surface-container-lowest border border-outline-variant/20 p-6">
-        <h2 class="text-xl font-semibold mb-3">Portfolio Performance</h2>
-        <p class="text-sm text-neutral-600 mb-4">This page shows a consolidated view of your hedging programs, cash reserve impact, and P&L risk mitigation.</p>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="p-4 bg-white border border-outline-variant rounded-lg">
-                <p class="text-xs uppercase text-neutral-500">Total hedge capacity</p>
-                <p class="text-2xl font-bold text-secondary">23,400 gal</p>
-            </div>
-            <div class="p-4 bg-white border border-outline-variant rounded-lg">
-                <p class="text-xs uppercase text-neutral-500">Estimated annual volatility saved</p>
-                <p class="text-2xl font-bold text-secondary">$7,800</p>
-            </div>
-            <div class="p-4 bg-white border border-outline-variant rounded-lg">
-                <p class="text-xs uppercase text-neutral-500">Current exposed spend</p>
-                <p class="text-2xl font-bold">$156,200</p>
-            </div>
-            <div class="p-4 bg-white border border-outline-variant rounded-lg">
-                <p class="text-xs uppercase text-neutral-500">Hedges in place</p>
-                <p class="text-2xl font-bold">5 Contracts</p>
-            </div>
-        </div>
-    </div>
-    <div class="bg-surface-container-lowest border border-outline-variant/20 p-6">
-        <h3 class="text-base font-medium">Why this helps</h3>
-        <ul class="list-disc list-inside text-sm text-neutral-700 mt-2">
-            <li>Converts unpredictable diesel price changes into a fixed catch-up payment stream.</li>
-            <li>Prevents 8%-15% margin erosion when diesel spikes above strike levels.</li>
-            <li>Improves fleet bidding confidence on new contracts by reducing fuel expense risk.</li>
-        </ul>
-    </div>
-</section>
-
 </main>
 <!-- Footer -->
-<footer class="bg-[#f9f9f9] dark:bg-neutral-950 w-full py-12 px-8 border-t border-[#c2c6d8]/10">
+<footer class="bg-background dark:bg-neutral-950 w-full py-12 px-8 border-t border-outline-variant/40">
 <div class="flex flex-col md:flex-row justify-between items-center gap-6 max-w-full mx-auto">
 <div class="flex flex-col gap-2">
-<span class="font-['Inter'] font-bold text-[#1a1c1c] dark:text-white text-lg tracking-tight">Hedjee</span>
-<p class="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-neutral-500">© 2025 Hedjee. Precision Fuel Hedging.</p>
+<span class="font-bold text-on-surface dark:text-white text-lg tracking-tight">Hedjee</span>
+<p class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted">© 2025 Hedjee. Precision Fuel Hedging.</p>
 </div>
 <div class="flex items-center gap-8">
-<a class="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 hover:text-[#1a1c1c] dark:hover:text-white transition-colors" href="#">Terms</a>
-<a class="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 hover:text-[#1a1c1c] dark:hover:text-white transition-colors" href="#">Privacy</a>
-<a class="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 hover:text-[#1a1c1c] dark:hover:text-white transition-colors" href="#">Support</a>
-<a class="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 hover:text-[#1a1c1c] dark:hover:text-white transition-colors" href="#">API Documentation</a>
+<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent dark:hover:text-accent transition-colors" href="#">Terms</a>
+<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent dark:hover:text-accent transition-colors" href="#">Privacy</a>
+<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent dark:hover:text-accent transition-colors" href="#">Support</a>
+<a class="font-mono text-[0.6875rem] uppercase tracking-wider text-on-surface-muted dark:text-neutral-400 hover:text-accent dark:hover:text-accent transition-colors" href="#">API Documentation</a>
 </div>
 </div>
 </footer>
@@ -960,15 +837,12 @@
         const views = {
             markets: document.getElementById('view-markets'),
             detail: document.getElementById('view-contract-detail'),
-            contracts: document.getElementById('view-contracts'),
-            portfolio: document.getElementById('view-portfolio')
+            contracts: document.getElementById('view-contracts')
         };
-        const heroSection = document.getElementById('hero-chart');
         const navLinks = document.querySelectorAll('nav a');
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileNav = document.getElementById('mobile-nav');
         const fuelButtons = document.querySelectorAll('.fuel-filter');
-        const rangeButtons = document.querySelectorAll('.range-filter');
         const marketCardsList = document.querySelectorAll('#markets-grid .market-card');
         const marketSearchInput = document.getElementById('market-search');
         const marketsEmptyEl = document.getElementById('markets-empty');
@@ -983,45 +857,6 @@
 
         const detailTitle = document.getElementById('detail-title');
         const detailCurrentPrice = document.getElementById('detail-current-price');
-
-        const chartPath = document.querySelector('.chart-path');
-        const heroCurrentPriceEl = document.getElementById('hero-current-price');
-        const hero24hChangeEl = document.getElementById('hero-24h-change');
-        let heroCurrentPrice = 3.1420;
-        const heroPathVariants = [
-            'M0,250 C100,240 200,260 300,180 S500,120 600,150 S800,80 1000,100',
-            'M0,250 C100,242 200,258 300,183 S500,126 600,154 S800,86 1000,106',
-            'M0,250 C100,238 200,262 300,178 S500,116 600,146 S800,78 1000,98',
-            'M0,250 C100,244 200,256 300,175 S500,118 600,153 S800,84 1000,102'
-        ];
-        
-        const applyPriceAnimation = (el) => {
-            if (!el) return;
-            el.classList.add('pulse-price');
-            setTimeout(() => el.classList.remove('pulse-price'), 400);
-        };
-
-        const updateHeroLive = () => {
-            if (!heroCurrentPriceEl || !hero24hChangeEl) return;
-            const delta = (Math.random() - 0.5) * 0.02;
-            heroCurrentPrice = Math.max(2.85, Math.min(3.35, heroCurrentPrice + delta));
-            const changeVal = (heroCurrentPrice - 3.1420).toFixed(4);
-            const changePct = ((changeVal / 3.1420) * 100).toFixed(2);
-
-            heroCurrentPriceEl.textContent = `$${heroCurrentPrice.toFixed(4)}`;
-            hero24hChangeEl.textContent = `${changeVal >= 0 ? '+' : ''}${changeVal} (${changePct}%)`;
-            hero24hChangeEl.classList.toggle('text-secondary', changeVal >= 0);
-            hero24hChangeEl.classList.toggle('text-error', changeVal < 0);
-
-            if (chartPath) {
-                chartPath.setAttribute('d', heroPathVariants[Math.floor(Math.random() * heroPathVariants.length)]);
-            }
-
-            applyPriceAnimation(heroCurrentPriceEl);
-            applyPriceAnimation(hero24hChangeEl);
-        };
-
-        setInterval(updateHeroLive, 2000);
 
         const demoButton = document.getElementById('demo-mode-btn');
         const demoTooltip = document.createElement('div');
@@ -1293,10 +1128,10 @@
                 const tr = document.createElement('tr');
                 const isSelected = i === selectedIdx;
                 tr.className = isSelected
-                    ? 'cursor-pointer border-l-[3px] border-primary bg-surface-container-low transition-colors'
+                    ? 'cursor-pointer border-l-[3px] border-accent bg-accent/5 transition-colors'
                     : 'cursor-pointer hover:bg-surface-container-low transition-colors';
                 tr.innerHTML = `
-                    <td class="py-4 ${isSelected ? 'pl-3' : ''} mono font-${isSelected ? 'bold text-primary' : 'medium text-on-surface'}">${s.label}${s.recommended ? ' <span class="text-[9px] font-bold text-primary/60 ml-1">REC</span>' : ''}</td>
+                    <td class="py-4 ${isSelected ? 'pl-3' : ''} mono font-${isSelected ? 'bold text-accent' : 'medium text-on-surface'}">${s.label}${s.recommended ? ' <span class="text-[9px] font-bold text-accent/70 ml-1">REC</span>' : ''}</td>
                     <td class="py-4 mono text-on-surface-variant">${s.prob}</td>
                     <td class="py-4 mono text-on-surface-variant">$${s.cost.toFixed(2)}/gal</td>
                     <td class="py-4 mono text-on-surface-variant text-right">${s.vol} gal</td>`;
@@ -1348,13 +1183,6 @@
             updateStrikeChart(data.strikes[idx].label, data.yTop, data.yBot);
             updateOrderPanel();
         }
-
-        const rangeData = {
-            '1D': 'M0,250 C100,240 200,260 300,180 S500,120 600,150 S800,80 1000,100',
-            '1W': 'M0,260 C100,250 200,240 300,190 S500,150 600,170 S800,140 1000,150',
-            '1M': 'M0,240 C100,230 200,220 300,180 S500,130 600,160 S800,110 1000,120',
-            'YTD': 'M0,245 C150,220 300,230 450,195 S600,130 750,120 900,130 1000,125'
-        };
 
         function showToast(message) {
             let toast = document.getElementById('demo-toast');
@@ -1455,31 +1283,20 @@
         }
 
         function switchView(target) {
-            const active = Object.values(views).find(v => !v.classList.contains('hidden')) || null;
+            const active = Object.values(views).find(v => v && !v.classList.contains('hidden')) || null;
             animateSwitch(active, views[target]);
 
-            if (target === 'markets') {
-                heroSection.classList.remove('hidden');
-                heroSection.classList.add('slide-enter');
-                heroSection.addEventListener('animationend', () => heroSection.classList.remove('slide-enter'), { once: true });
-            } else if (!heroSection.classList.contains('hidden')) {
-                heroSection.classList.add('slide-exit');
-                heroSection.addEventListener('animationend', () => {
-                    heroSection.classList.add('hidden');
-                    heroSection.classList.remove('slide-exit');
-                }, { once: true });
-            }
-
             navLinks.forEach(link => {
-                link.classList.remove('text-[#0066ff]', 'border-b-2', 'border-[#0066ff]', 'pb-4', '-mb-[17px]', 'font-medium');
-                link.classList.add('text-[#1a1c1c]', 'dark:text-neutral-400');
-                const navKey = link.textContent.toLowerCase();
-                if ((target === 'detail' && navKey.includes('markets')) ||
-                    (target === 'contracts' && navKey.includes('contracts')) ||
-                    (target === 'portfolio' && navKey.includes('portfolio')) ||
-                    (target === 'markets' && navKey.includes('markets'))) {
-                    link.classList.add('text-[#0066ff]', 'border-b-2', 'border-[#0066ff]', 'pb-4', '-mb-[17px]', 'font-medium');
-                    link.classList.remove('text-[#1a1c1c]', 'dark:text-neutral-400');
+                link.classList.remove('text-on-surface', 'dark:text-white', 'font-medium', 'border-accent');
+                link.classList.add('text-on-surface-variant', 'dark:text-neutral-400', 'border-transparent');
+            });
+            navLinks.forEach(link => {
+                const navKey = link.textContent.trim().toLowerCase();
+                const marketsActive = (target === 'markets' || target === 'detail') && navKey === 'markets';
+                const portfolioActive = target === 'contracts' && navKey === 'portfolio';
+                if (marketsActive || portfolioActive) {
+                    link.classList.remove('text-on-surface-variant', 'dark:text-neutral-400', 'border-transparent');
+                    link.classList.add('text-on-surface', 'dark:text-white', 'font-medium', 'border-accent');
                 }
             });
         }
@@ -1498,7 +1315,7 @@
             document.getElementById('detail-current-price').textContent = `$${data.current.toFixed(4)}`;
             const chgEl = document.getElementById('detail-change');
             chgEl.textContent = data.change;
-            chgEl.className = data.change.startsWith('-') ? 'text-xs mono text-error mt-1' : 'text-xs mono text-secondary mt-1';
+            chgEl.className = data.change.startsWith('-') ? 'text-xs mono text-error mt-1' : 'text-xs mono text-on-surface mt-1';
             document.getElementById('summary-settlement').textContent = data.settlementDate;
 
             // Chart paths
@@ -1514,7 +1331,7 @@
             // Duration reset
             document.querySelectorAll('.duration-btn').forEach(b => {
                 const active = b.dataset.weeks === '1';
-                b.className = `duration-btn flex-1 py-3 text-xs font-bold border transition-all ${active ? 'border-primary bg-primary text-white' : 'border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary'}`;
+                b.className = `duration-btn flex-1 py-3 text-xs font-bold border transition-all ${active ? 'border-primary bg-primary text-white' : 'border-outline-variant text-on-surface-variant hover:border-accent hover:text-accent'}`;
             });
 
             // Strike ladder + panel
@@ -1523,22 +1340,7 @@
             updateStrikeChart(data.strikes[detailActiveStrikeIdx].label, data.yTop, data.yBot);
             updateOrderPanel();
 
-            // Update hero chart path
-            if (chartPath) chartPath.setAttribute('d', data.path);
-
             switchView('detail');
-        }
-
-        function setRange(rangeKey) {
-            rangeButtons.forEach(btn => {
-                btn.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
-            });
-            const btn = Array.from(rangeButtons).find(b => b.dataset.range === rangeKey);
-            if (btn) {
-                btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
-            }
-            const d = rangeData[rangeKey] || rangeData['1D'];
-            if (chartPath) chartPath.setAttribute('d', d);
         }
 
         function applyMarketFilters() {
@@ -1602,16 +1404,12 @@
                 marketSearchInput.addEventListener('input', applyMarketFilters);
                 marketSearchInput.addEventListener('search', applyMarketFilters);
             }
-            rangeButtons.forEach(btn => {
-                btn.addEventListener('click', () => setRange(btn.dataset.range));
-            });
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const text = link.textContent.toLowerCase();
                     if (text.includes('markets')) switchView('markets');
-                    if (text.includes('contracts')) switchView('contracts');
-                    if (text.includes('portfolio')) switchView('portfolio');
+                    if (text.includes('portfolio')) switchView('contracts');
                 });
             });
 
@@ -1635,7 +1433,7 @@
                 detailWeeks = parseInt(btn.dataset.weeks);
                 document.querySelectorAll('.duration-btn').forEach(b => {
                     const active = b === btn;
-                    b.className = `duration-btn flex-1 py-3 text-xs font-bold border transition-all ${active ? 'border-primary bg-primary text-white' : 'border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary'}`;
+                    b.className = `duration-btn flex-1 py-3 text-xs font-bold border transition-all ${active ? 'border-primary bg-primary text-white' : 'border-outline-variant text-on-surface-variant hover:border-accent hover:text-accent'}`;
                 });
                 updateOrderPanel();
             });
@@ -1652,51 +1450,6 @@
         bindEvents();
         setDemoMode(false);
         setFuelFilter('All Fuels');
-        setRange('1D');
         switchView('markets');
-
-        // Existing chart hover logic remains in place
-        const chartArea = document.querySelector('.chart-area');
-        const vLine = document.getElementById('v-line');
-        const tooltip = document.getElementById('chart-tooltip');
-        const tooltipPrice = document.getElementById('tooltip-price');
-        const tooltipDate = document.getElementById('tooltip-date');
-        const linePath = document.querySelector('.chart-path');
-        const pathLength = linePath ? linePath.getTotalLength() : 0;
-
-        const chartPriceTop = 3.50;
-        const chartPriceBottom = 2.75;
-
-        chartArea.addEventListener('mousemove', (e) => {
-            const rect = chartArea.getBoundingClientRect();
-            const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
-            const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
-
-            const svgX = (x / rect.width) * 1000;
-            vLine.setAttribute('x1', svgX);
-            vLine.setAttribute('x2', svgX);
-            vLine.setAttribute('y1', 0);
-            vLine.setAttribute('y2', 300);
-
-            let price = 0;
-            if (linePath && pathLength > 0) {
-                const pointOnPath = linePath.getPointAtLength(Math.min(pathLength, Math.max(0, (x / rect.width) * pathLength)));
-                const normalizedY = 1 - (pointOnPath.y / 300);
-                price = chartPriceBottom + normalizedY * (chartPriceTop - chartPriceBottom);
-            } else {
-                const basePrice = 2.80;
-                price = basePrice + Math.sin(svgX / 100) * 0.4 + (svgX / 1000) * 0.3;
-            }
-
-            tooltip.style.left = `${x + 15}px`;
-            tooltip.style.top = `${Math.max(20, y - 45)}px`;
-
-            tooltipPrice.textContent = `$${price.toFixed(4)}`;
-
-            const months = ['OCT', 'NOV', 'DEC', 'JAN', 'FEB', 'MAR'];
-            const monthIdx = Math.min(Math.floor((svgX / 1000) * months.length), months.length - 1);
-            const day = Math.floor((svgX % (1000 / months.length)) / (1000 / (months.length * 30))) + 1;
-            tooltipDate.textContent = `${months[monthIdx]} ${day < 10 ? '0' + day : day}, 09:00 AM`;
-        });
 </script>
 </body></html>
