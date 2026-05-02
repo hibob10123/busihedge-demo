@@ -72,6 +72,87 @@
             animation: path-entrance 2s ease-out forwards;
         }
 
+        /* Detail viz toggle cards */
+        .detail-vis-choice { transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease; }
+        .detail-vis-choice:active { transform: scale(0.99); }
+
+        /* Detail strip — motion + clarity */
+        .strip-panel { transition: box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1), border-color 320ms ease; }
+        .strip-panel:hover { box-shadow: 0 16px 48px rgba(217, 119, 6, 0.09); border-color: rgba(217, 119, 6, 0.22); }
+        .strip-marker { transition: left 0.58s cubic-bezier(0.22, 1, 0.35, 1); will-change: left; }
+        .strip-payout { transition: left 0.58s cubic-bezier(0.22, 1, 0.35, 1), width 0.58s cubic-bezier(0.22, 1, 0.35, 1), filter 260ms ease; }
+        .strip-spot-pill {
+            animation: strip-pill-glow 2.8s ease-in-out infinite;
+        }
+        @keyframes strip-pill-glow {
+            0%, 100% { box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
+            50% { box-shadow: 0 2px 10px rgba(59, 130, 246, 0.12), 0 0 0 1px rgba(59, 130, 246, 0.12); }
+        }
+        html.dark .strip-spot-pill {
+            animation: strip-pill-glow-dark 2.8s ease-in-out infinite;
+        }
+        @keyframes strip-pill-glow-dark {
+            0%, 100% { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); }
+            50% { box-shadow: 0 2px 12px rgba(96, 165, 250, 0.2), 0 0 0 1px rgba(96, 165, 250, 0.12); }
+        }
+        .strip-spot-dot {
+            animation: strip-dot-breathe 2.2s ease-in-out infinite;
+        }
+        @keyframes strip-dot-breathe {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            55% { transform: scale(1.14); opacity: 0.92; }
+        }
+        @keyframes strip-payout-hit {
+            0% { filter: brightness(1.26) saturate(1.07); }
+            100% { filter: brightness(1) saturate(1); }
+        }
+        #detail-strip-protection.strip-payout-strip-hit {
+            animation: strip-payout-hit 420ms cubic-bezier(0.22, 1, 0.35, 1);
+        }
+        @keyframes strip-pay-shimmer {
+            0% { background-position: 0% 50%; opacity: 0.94; }
+            50% { opacity: 1; }
+            100% { background-position: 200% 50%; opacity: 0.93; }
+        }
+        #detail-strip-protection .strip-pay-shimmer-inner {
+            background-image: linear-gradient(100deg,
+                rgba(217, 119, 6, 0.52) 0%,
+                rgba(245, 158, 11, 0.68) 45%,
+                rgba(217, 119, 6, 0.48) 100%);
+            background-size: 240% 100%;
+            animation: strip-pay-shimmer 4.5s ease-in-out infinite;
+        }
+        html.dark #detail-strip-protection .strip-pay-shimmer-inner {
+            background-image: linear-gradient(100deg,
+                rgba(245, 158, 11, 0.34) 0%,
+                rgba(251, 191, 36, 0.48) 50%,
+                rgba(217, 119, 6, 0.3) 100%);
+        }
+        .strip-spark-wrap { animation: strip-spark-drift 6s ease-in-out infinite alternate; }
+        @keyframes strip-spark-drift {
+            0% { transform: translateY(0); opacity: 0.97; }
+            100% { transform: translateY(-2px); opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .strip-panel,
+            .strip-marker,
+            .strip-payout { transition-duration: 0.05s !important; }
+            .strip-panel:hover { box-shadow: none; }
+            .strip-spot-pill,
+            html.dark .strip-spot-pill,
+            .strip-spot-dot,
+            #detail-strip-protection .strip-pay-shimmer-inner,
+            .strip-spark-wrap {
+                animation: none !important;
+            }
+            #detail-strip-protection.strip-payout-strip-hit {
+                animation: none !important;
+            }
+            .detail-vis-choice:active {
+                transform: none !important;
+            }
+        }
+
         /* Minimal coherent page transitions */
         .section-transition {
             position: relative;
@@ -90,6 +171,7 @@
         }
         .slide-exit {
             animation: slide-out-left 280ms ease-in forwards;
+            pointer-events: none;
         }
 
         /* Gentle card hover feedback */
@@ -247,8 +329,11 @@
         #darkmode-btn:hover svg { transform: rotate(15deg); }
 
         /* Detail view dark mode */
+        /* Detail strip (spot vs strike) */
+        html.dark #detail-strip-spark { stroke: #e2e8f0 !important; }
         html.dark #detail-svg line[stroke="#eeeeee"] { stroke: #334155 !important; }
         html.dark #detail-strike-label { background-color: #F59E0B !important; color: #1c1917 !important; }
+        html.dark #detail-strip-spot-caption { border-color: rgba(71, 85, 105, 0.55) !important; background-color: #1e293b !important; }
         html.dark select { color-scheme: dark; }
         html.dark select option { background-color: #1e293b; color: #e2e8f0; }
     </style>
@@ -572,31 +657,113 @@
 <div class="grid grid-cols-1 lg:grid-cols-10 gap-12">
 <!-- Left: Chart + Strike Ladder -->
 <div class="lg:col-span-6 space-y-12">
-    <!-- Chart -->
-    <div class="bg-surface-container-lowest p-6 border border-outline-variant/20 info-feature" data-demo-message="Price projection chart shows historical trend plus a modeled forecast band. The dashed horizontal line is your selected strike price.">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-sm font-bold uppercase tracking-wider text-on-surface">Price Projection &amp; Strike</h3>
-            <div class="flex items-center gap-5 text-[11px] font-medium text-on-surface-variant">
-                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span> Historical</span>
-                <span class="flex items-center gap-1.5"><span class="inline-block w-5 border-t-2 border-dashed border-accent-dark"></span> Forecast</span>
+    <!-- Chart (+ viz toggle: strip default, classic forecast SVG) -->
+    <div class="strip-panel bg-surface-container-lowest p-6 border border-outline-variant/20 info-feature" data-demo-message="Use the tabs to flip between the fast strike strip and the full history + forecast chart. Strip is tuned for payoff intuition.">
+
+        <div class="mb-8 grid grid-cols-2 gap-2.5 sm:gap-3" role="radiogroup" aria-label="Price visualization format">
+            <button type="button" id="detail-vis-btn-strip" class="detail-vis-choice flex flex-col items-start gap-0.5 rounded-lg border px-4 py-3 text-left outline-none ring-primary/35 focus-visible:ring-2 sm:gap-1" aria-checked="true" role="radio">
+                <span class="text-[11px] font-bold uppercase tracking-[0.12em] text-on-surface sm:text-xs">Strike strip</span>
+                <span class="leading-snug text-[10px] text-on-surface-variant sm:text-[11px]">Spot vs payoff side · default</span>
+            </button>
+            <button type="button" id="detail-vis-btn-chart" class="detail-vis-choice flex flex-col items-start gap-0.5 rounded-lg border px-4 py-3 text-left outline-none ring-primary/35 focus-visible:ring-2 sm:gap-1" aria-checked="false" role="radio">
+                <span class="text-[11px] font-bold uppercase tracking-[0.12em] text-on-surface sm:text-xs">Forecast chart</span>
+                <span class="leading-snug text-[10px] text-on-surface-variant sm:text-[11px]">History · band · mid outlook</span>
+            </button>
+        </div>
+
+        <!-- #3 Strike strip (main) -->
+        <div id="detail-vis-strip">
+        <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-on-surface">Strike vs spot</h3>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] font-medium tracking-tight text-on-surface-variant">
+                <span class="flex items-center gap-1.5"><span class="strip-legend-dot inline-block size-2 rounded-full border border-primary bg-surface-container-low shadow-sm ring-2 ring-primary/25 dark:border-blue-400"></span> Spot</span>
+                <span class="text-on-surface-variant/35">·</span>
+                <span class="flex items-center gap-1.5"><span class="inline-block h-4 w-[2px] rounded-full bg-accent-dark dark:bg-amber-500"></span> Strike</span>
+                <span class="text-on-surface-variant/35">·</span>
+                <span class="flex items-center gap-1.5"><span class="inline-block h-2.5 w-7 rounded-r-full bg-accent/45 ring-1 ring-inset ring-accent-dark/20"></span> Pays above</span>
             </div>
         </div>
-        <div class="h-56 w-full relative" id="detail-chart-wrap">
-            <svg class="w-full h-full overflow-visible" id="detail-svg" preserveAspectRatio="none" viewBox="0 0 800 200">
-                <line id="dg1" stroke="#eeeeee" stroke-width="1" x1="0" x2="800" y1="50" y2="50"/>
-                <line id="dg2" stroke="#eeeeee" stroke-width="1" x1="0" x2="800" y1="100" y2="100"/>
-                <line id="dg3" stroke="#eeeeee" stroke-width="1" x1="0" x2="800" y1="150" y2="150"/>
-                <path id="detail-hist" class="detail-chart-path" d="M0,180 L50,175 L100,165 L150,170 L200,155 L250,160 L300,140 L350,145 L400,130" fill="none" stroke="#121212" stroke-width="2.5"/>
-                <path id="detail-band" d="M400,130 L450,110 L500,105 L550,85 L600,75 L650,60 L700,55 L750,45 L800,40 L800,120 L750,125 L700,135 L650,140 L600,155 L550,165 L500,185 L450,195 L400,130 Z" fill="#D97706" fill-opacity="0.14"/>
-                <path id="detail-forecast" d="M400,130 L450,115 L500,108 L550,95 L600,85 L650,70 L700,65 L750,55 L800,50" fill="none" stroke="#B45309" stroke-dasharray="4 4" stroke-width="2.25" stroke-opacity="1"/>
-                <line id="detail-strike-line" stroke="#121212" stroke-dasharray="6 2" stroke-width="1.5" x1="0" x2="800" y1="112" y2="112"/>
-                <circle cx="400" cy="130" fill="#B45309" r="4.5"/>
-            </svg>
-            <div id="detail-strike-label" class="absolute right-0 bg-accent-dark text-on-accent px-2 py-0.5 text-[10px] mono pointer-events-none" style="top:112px;transform:translateY(-50%)">STRIKE: $3.15</div>
-            <div class="absolute right-0 top-0 h-full flex flex-col justify-between py-1 pr-16 text-[10px] mono text-on-surface-variant pointer-events-none" id="detail-y-axis">
-                <span id="d-y1">$3.60</span><span id="d-y2">$3.30</span><span id="d-y3">$3.00</span>
+        <p class="mt-3 max-w-md text-[13px] leading-snug text-on-surface-variant">Payout when the quoted index settles <strong class="font-semibold text-on-surface">above your strike</strong>.</p>
+
+        <div id="detail-chart-wrap" class="relative mx-auto mt-10 max-w-xl pb-4">
+            <div class="detail-strip-gutter pointer-events-none px-[6%] sm:px-[8%]" aria-hidden="true">
+                <div class="mb-1 flex justify-between tabular-nums text-[10px] mono text-on-surface-variant/95">
+                    <span id="strip-label-low">$2.80</span>
+                    <span id="strip-label-high">$3.60</span>
+                </div>
+
+                <div class="relative z-[3] h-9 overflow-visible">
+                    <div id="detail-strip-spot" class="strip-marker strip-marker-spot absolute bottom-0 left-0 hidden -translate-x-1/2" style="left:0%">
+                        <div class="flex flex-col items-center gap-1">
+                            <span id="detail-strip-spot-caption" class="strip-spot-pill rounded-full border border-outline-variant/40 bg-surface-container-low px-2.5 py-0.5 text-[10px] font-semibold tabular-nums text-on-surface whitespace-nowrap dark:border-neutral-600 dark:bg-neutral-900/90">$0.0000</span>
+                            <span class="strip-spot-dot inline-block size-[11px] rounded-full border-2 border-primary bg-surface-container-lowest shadow-sm dark:border-sky-400"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative z-[1] rounded-full bg-surface-container-highest py-px ring ring-inset ring-outline-variant/25 dark:bg-neutral-800/80 dark:ring-neutral-600/35">
+                    <div class="relative h-[11px] w-full overflow-hidden rounded-full bg-gradient-to-r from-surface-container-high via-surface-container-high/92 to-surface-container-high dark:from-neutral-900/72 dark:to-neutral-900/55">
+                        <div id="detail-strip-protection" class="strip-payout absolute inset-y-0 overflow-hidden rounded-r-full right-0" style="left:56%;width:44%">
+                            <span class="strip-pay-shimmer-inner block h-full w-full min-w-[2.5rem] rounded-r-full" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative z-[2] mt-px h-[2rem] overflow-visible">
+                    <div id="detail-strip-strike" class="strip-marker strip-marker-strike absolute left-0 top-0 hidden -translate-x-1/2 flex flex-col items-center" style="left:0%">
+                        <span class="strip-strike-stick -mb-[1px] inline-block h-7 w-[2px] rounded-full bg-accent-dark shadow-sm ring-4 ring-accent/10 dark:bg-amber-500 dark:ring-amber-500/10"></span>
+                        <span id="detail-strip-strike-caption" class="text-[10px] font-semibold mono tabular-nums text-accent-dark dark:text-amber-400 whitespace-nowrap">$0.00</span>
+                    </div>
+                </div>
+            </div>
+            <p id="detail-strip-relation" class="strip-relation mx-auto mt-6 max-w-sm text-center text-[11px] font-medium leading-snug"></p>
+        </div>
+
+        <div class="border-t border-outline-variant/15 pt-6 dark:border-neutral-700/55">
+            <p class="text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant">Recent path</p>
+            <div class="strip-spark-wrap">
+                <svg id="detail-spark-svg" class="mt-2.5 h-[2.875rem] w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 400 200">
+                    <path id="detail-strip-spark" class="detail-chart-path" d="M0,180 L50,175 L100,165 L150,170 L200,155 L250,160 L300,140 L350,145 L400,130" fill="none" stroke="#121212" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.75"/>
+                </svg>
             </div>
         </div>
+        </div><!-- /detail-vis-strip -->
+
+        <!-- Classic full projection SVG -->
+        <div id="detail-vis-classic" class="hidden">
+            <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-on-surface">Price projection</h3>
+                    <p class="mt-1 max-w-md text-[12px] leading-snug text-on-surface-variant">Historical track, modeled uncertainty band, and dashed mid-outlook vs your strike.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-x-5 gap-y-1 text-[10px] font-medium text-on-surface-variant">
+                    <span class="flex items-center gap-1.5"><span class="h-px w-3.5 bg-primary"></span> History</span>
+                    <span class="flex items-center gap-1.5"><span class="inline-block h-2 w-6 rounded-sm border border-accent-dark/35 bg-accent/15"></span> Range</span>
+                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 border-t border-dashed border-accent-dark"></span> Mid outlook</span>
+                </div>
+            </div>
+            <div class="flex min-h-[14rem] w-full flex-col gap-5 sm:flex-row sm:gap-6 sm:items-stretch">
+                <div class="relative h-52 min-h-[13rem] min-w-0 flex-1 overflow-hidden rounded-sm border border-transparent sm:min-h-0">
+                    <svg id="detail-svg" class="absolute inset-0 size-full overflow-hidden bg-transparent" preserveAspectRatio="none" viewBox="0 0 800 200">
+                        <line id="dg1" stroke="#eeeeee" stroke-width="1" x1="0" x2="758" y1="50" y2="50"/>
+                        <line id="dg2" stroke="#eeeeee" stroke-width="1" x1="0" x2="758" y1="100" y2="100"/>
+                        <line id="dg3" stroke="#eeeeee" stroke-width="1" x1="0" x2="758" y1="150" y2="150"/>
+                        <path id="detail-hist" class="detail-chart-path" d="M0,180 L50,175 L100,165 L150,170 L200,155 L250,160 L300,140 L350,145 L400,130" fill="none" stroke="#121212" stroke-width="2.5"/>
+                        <path id="detail-band" d="M400,130 L450,110 L500,105 L550,85 L600,75 L650,60 L700,55 L750,45 L800,40 L800,120 L750,125 L700,135 L650,140 L600,155 L550,165 L500,185 L450,195 L400,130 Z" fill="#D97706" fill-opacity="0.14"/>
+                        <path id="detail-forecast" d="M400,130 L450,115 L500,108 L550,95 L600,85 L650,70 L700,65 L750,55 L800,50" fill="none" stroke="#B45309" stroke-dasharray="4 4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke-opacity="1"/>
+                        <line id="detail-strike-line" stroke="#121212" stroke-dasharray="6 2" stroke-width="1.5" x1="0" x2="758" y1="112" y2="112"/>
+                    </svg>
+                    <div id="detail-strike-label" class="absolute right-2 z-10 bg-accent-dark px-2 py-0.5 text-[10px] mono text-on-accent pointer-events-none whitespace-nowrap rounded-sm shadow-sm tabular-nums dark:bg-amber-500 dark:text-neutral-950" style="top:56%;transform:translateY(-50%)">STRIKE: $3.15</div>
+                </div>
+                <div id="detail-y-axis" class="relative flex min-h-[40px] w-full shrink-0 flex-row items-center justify-evenly gap-2 border-t border-outline-variant/35 pt-3 text-[10px] tabular-nums mono text-on-surface-variant sm:h-52 sm:w-14 sm:flex-col sm:justify-between sm:border-t-0 sm:border-l sm:border-outline-variant/35 sm:py-6 sm:pt-7 sm:text-right">
+                    <span id="d-y1">$3.60</span>
+                    <span id="d-y2">$3.20</span>
+                    <span id="d-y3">$2.80</span>
+                </div>
+            </div>
+        </div>
+        <!-- /detail-vis-classic -->
+
     </div>
     <!-- Strike Ladder -->
     <div class="info-feature" data-demo-message="Click any row to select that strike — the order panel updates instantly. Lower strikes have higher premiums but trigger more easily.">
@@ -1115,10 +1282,72 @@
         let detailActiveStrikeIdx = 1;
         let detailWeeks = 1;
         let detailAssetKey = null;
+        /** Detail chart area: `'strip'` (default) · `'classic'` SVG */
+        let detailVizMode = 'strip';
 
-        function strikePriceToY(priceStr, yTop, yBot) {
-            const p = parseFloat(priceStr.replace('$',''));
-            return ((yTop - p) / (yTop - yBot)) * 200;
+        const VIZ_BTN_BASE =
+            'detail-vis-choice flex flex-col items-start gap-0.5 rounded-lg border px-4 py-3 text-left outline-none ring-primary/35 focus-visible:ring-2 sm:gap-1';
+        const VIZ_BTN_OFF =
+            'border-outline-variant/55 bg-transparent hover:bg-surface-container-low/80 dark:border-neutral-600 dark:hover:bg-neutral-800/55';
+        const VIZ_BTN_ON =
+            'border-primary bg-primary/10 shadow-sm ring-1 ring-primary/30 dark:border-amber-500/60 dark:bg-amber-500/14 dark:ring-amber-400/28';
+
+        function applyDetailVisualization(mode) {
+            if (mode !== 'strip' && mode !== 'classic') return;
+            detailVizMode = mode;
+            document.getElementById('detail-vis-strip')?.classList.toggle('hidden', mode !== 'strip');
+            document.getElementById('detail-vis-classic')?.classList.toggle('hidden', mode !== 'classic');
+
+            const bStrip = document.getElementById('detail-vis-btn-strip');
+            const bChart = document.getElementById('detail-vis-btn-chart');
+            const onStrip = mode === 'strip';
+            if (bStrip) {
+                bStrip.setAttribute('aria-checked', onStrip ? 'true' : 'false');
+                bStrip.className = `${VIZ_BTN_BASE} ${onStrip ? VIZ_BTN_ON : VIZ_BTN_OFF}`;
+            }
+            if (bChart) {
+                bChart.setAttribute('aria-checked', (!onStrip).toString());
+                bChart.className = `${VIZ_BTN_BASE} ${onStrip ? VIZ_BTN_OFF : VIZ_BTN_ON}`;
+            }
+        }
+
+        function parsePriceUsd(v) {
+            if (typeof v === 'number' && !Number.isNaN(v)) return v;
+            return parseFloat(String(v).replace(/[$,]/g, '')) || 0;
+        }
+
+        function strikePriceToY(priceLabel, yTop, yBot) {
+            const p = parsePriceUsd(priceLabel);
+            const range = yTop - yBot;
+            if (range <= 0) return 100;
+            return ((yTop - p) / range) * 200;
+        }
+
+        function strikePriceToPct(priceVal, yTop, yBot) {
+            const p = typeof priceVal === 'number' ? priceVal : parsePriceUsd(priceVal);
+            const range = yTop - yBot;
+            if (range <= 0) return 50;
+            return Math.min(100, Math.max(0, ((p - yBot) / range) * 100));
+        }
+
+        /** Nudge overlapping strip markers horizontally (percent of track width). */
+        function adjustStripOverlaps(spotPct, strikePct, minGap = 12) {
+            let s = spotPct;
+            let k = strikePct;
+            const origS = s;
+            const origK = k;
+            const near = Math.abs(s - k) < minGap;
+            if (!near) return [s, k, false];
+            const midpoint = (s + k) / 2;
+            if (spotPct <= strikePct) {
+                s = Math.max(5, midpoint - minGap / 2);
+                k = Math.min(95, midpoint + minGap / 2);
+            } else {
+                k = Math.max(5, midpoint - minGap / 2);
+                s = Math.min(95, midpoint + minGap / 2);
+            }
+            const moved = Math.abs(origS - s) > 0.2 || Math.abs(origK - k) > 0.2;
+            return [s, k, moved];
         }
 
         function renderStrikeLadder(strikes, selectedIdx) {
@@ -1168,11 +1397,70 @@
         }
 
         function updateStrikeChart(strikeLabel, yTop, yBot) {
-            const y = strikePriceToY(strikeLabel, yTop, yBot);
-            const line = document.getElementById('detail-strike-line');
-            const lbl  = document.getElementById('detail-strike-label');
-            if (line) { line.setAttribute('y1', y); line.setAttribute('y2', y); }
-            if (lbl)  { lbl.style.top = y + 'px'; lbl.textContent = 'STRIKE: ' + strikeLabel; }
+            if (!detailAssetKey) return;
+            const spot = assetData[detailAssetKey]?.current ?? 0;
+            const strikeP = parsePriceUsd(strikeLabel);
+            let spotPct = strikePriceToPct(spot, yTop, yBot);
+            let strikePct = strikePriceToPct(strikeP, yTop, yBot);
+            const overlap = adjustStripOverlaps(spotPct, strikePct);
+            spotPct = overlap[0];
+            strikePct = overlap[1];
+
+            const prot = document.getElementById('detail-strip-protection');
+            if (prot) {
+                const realStrikePct = strikePriceToPct(strikeP, yTop, yBot);
+                prot.style.left = `${realStrikePct}%`;
+                prot.style.width = `${Math.max(0, 100 - realStrikePct)}%`;
+                prot.classList.remove('strip-payout-strip-hit');
+                void prot.offsetWidth;
+                prot.classList.add('strip-payout-strip-hit');
+                prot.addEventListener(
+                    'animationend',
+                    (e) => {
+                        if (e.target !== prot || e.animationName !== 'strip-payout-hit') return;
+                        prot.classList.remove('strip-payout-strip-hit');
+                    },
+                    { once: true }
+                );
+            }
+
+            const spotEl = document.getElementById('detail-strip-spot');
+            const strikeEl = document.getElementById('detail-strip-strike');
+            const cap = document.getElementById('detail-strip-spot-caption');
+            const scap = document.getElementById('detail-strip-strike-caption');
+            if (spotEl) {
+                spotEl.style.left = `${spotPct}%`;
+                spotEl.classList.remove('hidden');
+            }
+            if (strikeEl) {
+                strikeEl.style.left = `${strikePct}%`;
+                strikeEl.classList.remove('hidden');
+            }
+            if (cap) cap.textContent = `$${spot.toFixed(4)}`;
+            if (scap) scap.textContent = strikeLabel;
+
+            const relation = document.getElementById('detail-strip-relation');
+            if (relation) {
+                const eps = 0.004;
+                const below = spot < strikeP - eps;
+                relation.textContent = below ? 'Below strike · no payout on this snap.' : 'Above strike · would pay.';
+                relation.className =
+                    'strip-relation mx-auto mt-6 max-w-sm text-center text-[11px] font-medium leading-snug ' +
+                    (below ? 'text-on-surface-variant' : 'text-accent-dark dark:text-amber-400');
+            }
+
+            const yClassic = strikePriceToY(strikeLabel, yTop, yBot);
+            const strikeLineEl = document.getElementById('detail-strike-line');
+            if (strikeLineEl) {
+                strikeLineEl.setAttribute('y1', yClassic);
+                strikeLineEl.setAttribute('y2', yClassic);
+            }
+            const classicLbl = document.getElementById('detail-strike-label');
+            if (classicLbl) {
+                classicLbl.style.top = `${(yClassic / 200) * 100}%`;
+                classicLbl.style.transform = 'translateY(-50%)';
+                classicLbl.textContent = 'STRIKE: ' + strikeLabel;
+            }
         }
 
         function selectDetailStrike(idx) {
@@ -1319,15 +1607,22 @@
             chgEl.className = data.change.startsWith('-') ? 'text-xs mono text-error mt-1' : 'text-xs mono text-on-surface mt-1';
             document.getElementById('summary-settlement').textContent = data.settlementDate;
 
-            // Chart paths
-            document.getElementById('detail-hist').setAttribute('d', data.histPath);
-            document.getElementById('detail-forecast').setAttribute('d', data.forecastPath);
-            document.getElementById('detail-band').setAttribute('d', data.forecastBand);
+            const spark = document.getElementById('detail-strip-spark');
+            if (spark) spark.setAttribute('d', data.histPath);
+            const lowLbl = document.getElementById('strip-label-low');
+            const hiLbl = document.getElementById('strip-label-high');
+            if (lowLbl) lowLbl.textContent = `$${Number(data.yBot).toFixed(2)}`;
+            if (hiLbl) hiLbl.textContent = `$${Number(data.yTop).toFixed(2)}`;
 
-            // Y axis labels
-            document.getElementById('d-y1').textContent = data.yLabels[0];
-            document.getElementById('d-y2').textContent = data.yLabels[1];
-            document.getElementById('d-y3').textContent = data.yLabels[2];
+            document.getElementById('detail-hist')?.setAttribute('d', data.histPath);
+            document.getElementById('detail-forecast')?.setAttribute('d', data.forecastPath);
+            document.getElementById('detail-band')?.setAttribute('d', data.forecastBand);
+            const elDy1 = document.getElementById('d-y1');
+            const elDy2 = document.getElementById('d-y2');
+            const elDy3 = document.getElementById('d-y3');
+            if (elDy1) elDy1.textContent = data.yLabels[0];
+            if (elDy2) elDy2.textContent = data.yLabels[1];
+            if (elDy3) elDy3.textContent = data.yLabels[2];
 
             // Duration reset
             document.querySelectorAll('.duration-btn').forEach(b => {
@@ -1338,6 +1633,7 @@
             // Strike ladder + panel
             renderStrikeLadder(data.strikes, detailActiveStrikeIdx);
             populateStrikeSelect(data.strikes, detailActiveStrikeIdx);
+            applyDetailVisualization('strip');
             updateStrikeChart(data.strikes[detailActiveStrikeIdx].label, data.yTop, data.yBot);
             updateOrderPanel();
 
@@ -1446,8 +1742,12 @@
 
             // Volume input
             document.getElementById('detail-volume-input')?.addEventListener('input', () => updateOrderPanel());
+
+            document.getElementById('detail-vis-btn-strip')?.addEventListener('click', () => applyDetailVisualization('strip'));
+            document.getElementById('detail-vis-btn-chart')?.addEventListener('click', () => applyDetailVisualization('classic'));
         }
 
+        applyDetailVisualization('strip');
         bindEvents();
         setDemoMode(false);
         setFuelFilter('All Fuels');
